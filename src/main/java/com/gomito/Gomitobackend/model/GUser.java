@@ -27,6 +27,9 @@ public class GUser {
     @NotEmpty(message = "Email is required")
     private String email;
 
+    @NotBlank
+    private String password;
+
     private Instant created;
 
     private boolean enabled;
