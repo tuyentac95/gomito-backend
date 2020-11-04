@@ -18,8 +18,5 @@ public class GCard {
     private Long cardId;
     private String cardName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private GList list;
-
 
 }
