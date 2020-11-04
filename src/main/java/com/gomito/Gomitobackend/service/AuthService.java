@@ -60,7 +60,6 @@ public class AuthService {
         verificationToken.setUser(gUser);
         verificationTokenRepository.save(verificationToken);
         return token;
-
     }
 
     private String encodePassword(String password) {
