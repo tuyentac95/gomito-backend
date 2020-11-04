@@ -1,11 +1,15 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.AuthenticationResponse;
+import com.gomito.Gomitobackend.dto.LoginRequest;
 import com.gomito.Gomitobackend.dto.SignUpRequest;
 import com.gomito.Gomitobackend.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @AllArgsConstructor
@@ -23,6 +27,11 @@ public class SignUpController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token){
         authService.verifyAccount(token);
         return new ResponseEntity<>("Tài khoản được kích hoạt thành công", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 
 }

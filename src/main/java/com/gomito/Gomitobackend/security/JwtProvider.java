@@ -1,12 +1,10 @@
 package com.gomito.Gomitobackend.security;
 
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
-import com.gomito.Gomitobackend.model.GUser;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -23,8 +21,8 @@ import static java.util.Date.from;
 @Service
 public class JwtProvider {
     private KeyStore keyStore;
-    @Value("${jwt.expiration.time}")
-    private Long jwtExpirationInMillis;
+//    @Value("${jwt.expiration.time}")
+    private final Long jwtExpirationInMillis = 900000L;
 
     public JwtProvider() {
     }
@@ -33,7 +31,7 @@ public class JwtProvider {
     public void init(){
         try{
             keyStore =KeyStore.getInstance("JKS");
-            InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
+            InputStream resourceAsStream = getClass().getResourceAsStream("/springgomito.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException| IOException e){
             throw new SpringGomitoException("Exception occurred while loading keystore", e);
@@ -41,7 +39,7 @@ public class JwtProvider {
     }
 
     public String generateToken(Authentication authentication){
-        GUser principal = (GUser) authentication.getPrincipal();
+        User principal = (User) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(principal.getUsername())
                 .setIssuedAt(from(Instant.now()))
@@ -51,23 +49,24 @@ public class JwtProvider {
                 
     }
 
-    private PrivateKey getPrivateKey() {
+    private Key getPrivateKey() {
         try{
-            return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
+            System.out.println("Key: " + keyStore.getKey("springgomito", "secret".toCharArray()));
+            return keyStore.getKey("springgomito", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e){
             throw new SpringGomitoException("Exception occured while retrieving public key from keystore", e);
         }
     }
 
     public boolean validateToken(String jwt) {
-        parser().setSigningKey((byte[]) getPublickey()).parseClaimsJws(jwt);
+        parser().setSigningKey( getPublicKey()).parseClaimsJws(jwt);
         return true;
     }
 
 
-    private Object getPublickey() {
+    private PublicKey getPublicKey() {
         try {
-            return keyStore.getCertificate("springblog").getPublicKey();
+            return keyStore.getCertificate("springgomito").getPublicKey();
         } catch (KeyStoreException e) {
             throw new SpringGomitoException("Exception occured while " +
                     "retrieving public key from keystore", e);
@@ -76,7 +75,7 @@ public class JwtProvider {
 
     public String getUsernameFromJwt(String token) {
         Claims claims = parser()
-                .setSigningKey((byte[]) getPublickey())
+                .setSigningKey(getPublicKey())
                 .parseClaimsJws(token)
                 .getBody();
 

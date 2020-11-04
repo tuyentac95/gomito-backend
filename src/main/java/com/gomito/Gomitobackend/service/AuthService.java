@@ -11,7 +11,7 @@ import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.VerificationTokenRepository;
 import com.gomito.Gomitobackend.security.JwtProvider;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-@Slf4j
+@Transactional
 public class AuthService {
     private final GUserRepository gUserRepository;
     private final VerificationTokenRepository verificationTokenRepository;
@@ -40,14 +40,15 @@ public class AuthService {
         gUser.setUsername(signUpRequest.getUsername());
         gUser.setEmail(signUpRequest.getEmail());
         gUser.setPassword(encodePassword(signUpRequest.getPassword()));
-        gUser.setEnabled(false);
+//        gUser.setEnabled(false);
+        gUser.setEnabled(true);
         gUserRepository.save(gUser);
 
-        String token = generateVerificationToken(gUser);
-        mailService.setMail(new NotificationEmail("Please Activate your Account",
-                gUser.getEmail(),"Thank you for signing up to Spring Reddit, " +
-                "please click on the below url to activate your account : " +
-                "http://localhost:8080/auth/accountVerification/" + token));
+//        String token = generateVerificationToken(gUser);
+//        mailService.setMail(new NotificationEmail("Please Activate your Account",
+//                gUser.getEmail(),"Thank you for signing up to Spring Reddit, " +
+//                "please click on the below url to activate your account : " +
+//                "http://localhost:8080/auth/accountVerification/" + token));
     }
 
 
