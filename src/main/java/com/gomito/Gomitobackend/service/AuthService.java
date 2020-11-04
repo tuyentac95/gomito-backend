@@ -3,6 +3,7 @@ package com.gomito.Gomitobackend.service;
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.dto.AuthenticationResponse;
 import com.gomito.Gomitobackend.dto.LoginRequest;
+import com.gomito.Gomitobackend.dto.RefreshTokenRequest;
 import com.gomito.Gomitobackend.dto.SignUpRequest;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.model.NotificationEmail;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +35,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final MailService mailService;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void signUp(SignUpRequest signUpRequest) {
@@ -68,11 +71,17 @@ public class AuthService {
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest){
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword()));
-        String authenticationToken = jwtProvider.generateToken(authenticate);
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtProvider.generateToken(authentication);
+
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
     }
 
     public void verifyAccount(String token){
@@ -89,4 +98,15 @@ public class AuthService {
         gUserRepository.save(gUser);
     }
 
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
+    }
 }
