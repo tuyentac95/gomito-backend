@@ -5,20 +5,23 @@ import com.gomito.Gomitobackend.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/auth")
 public class SignUpController {
     private final AuthService authService;
 
-    @PostMapping("/sigup")
+    @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest){
     authService.signUp(signUpRequest);
     return new ResponseEntity<>("Bạn đăng ký thành công", HttpStatus.OK);
+    }
+
+    @GetMapping("/accountVerification/{token}")
+    public ResponseEntity<String> verifyAccount(@PathVariable String token){
+        authService.verifyAccount(token);
+        return new ResponseEntity<>("Tài khoản được kích hoạt thành công", HttpStatus.OK);
     }
 }
