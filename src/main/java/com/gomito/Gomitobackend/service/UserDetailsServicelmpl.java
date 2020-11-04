@@ -1,4 +1,34 @@
 package com.gomito.Gomitobackend.service;
 
-public class UserDetailsServicelmpl {
+import com.gomito.Gomitobackend.model.GUser;
+import com.gomito.Gomitobackend.repository.GUserRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
+@Service
+@AllArgsConstructor
+public class UserDetailsServicelmpl implements UserDetailsService {
+    private final GUserRepository gUserRepository;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<GUser> userOptional = gUserRepository.findByUsername(username);
+        GUser gUser = userOptional
+                .orElseThrow(() -> new UsernameNotFoundException("No user" + "Found with username : " + username);
+        return new org.springframework.security
+                .core.userdetails.User(gUser.getUsername(), gUser.getPassword(),
+                gUser.isEnabled(), true,true,
+                true, getAuthorities("USER"));
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(String role) {
+        return Collections.singletonList(new SingleGrantedAuthority(role));
+    }
 }
