@@ -20,6 +20,4 @@ public class GList {
     @ManyToOne(fetch = FetchType.LAZY)
     private GBoard board;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<GBoard> boards;
 }

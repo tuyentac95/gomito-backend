@@ -21,6 +21,4 @@ public class GBoard {
     @ManyToOne(fetch = FetchType.LAZY)
     private GUser user;
 
-    @OneToMany(fetch=FetchType.LAZY)
-    private List<GList> lists;
 }
