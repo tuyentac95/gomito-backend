@@ -2,12 +2,16 @@ package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.dto.AuthenticationResponse;
 import com.gomito.Gomitobackend.dto.LoginRequest;
+import com.gomito.Gomitobackend.dto.RefreshTokenRequest;
 import com.gomito.Gomitobackend.dto.SignUpRequest;
 import com.gomito.Gomitobackend.service.AuthService;
+import com.gomito.Gomitobackend.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -17,6 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 @CrossOrigin("*")
 public class SignUpController {
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest){
@@ -36,4 +41,14 @@ public class SignUpController {
         return authService.login(loginRequest);
     }
 
+    @PostMapping("refresh/token")
+    public AuthenticationResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
+        return authService.refreshToken(refreshTokenRequest);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
+        refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
+        return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
+    }
 }

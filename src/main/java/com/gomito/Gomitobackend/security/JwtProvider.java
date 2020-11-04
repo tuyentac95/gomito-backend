@@ -22,7 +22,7 @@ import static java.util.Date.from;
 public class JwtProvider {
     private KeyStore keyStore;
 //    @Value("${jwt.expiration.time}")
-    private final Long jwtExpirationInMillis = 900000L;
+    private final Long jwtExpirationInMillis = 10000L;
 
     public JwtProvider() {
     }
@@ -38,10 +38,19 @@ public class JwtProvider {
         }
     }
 
-    public String generateToken(Authentication authentication){
-        User principal = (User) authentication.getPrincipal();
+    public String generateToken(Authentication authentication) {
+        org.springframework.security.core.userdetails.User principal = (User) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(principal.getUsername())
+                .setIssuedAt(from(Instant.now()))
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
+                .compact();
+    }
+
+    public String generateTokenWithUserName(String username){
+        return Jwts.builder()
+                .setSubject(username)
                 .setIssuedAt(from(Instant.now()))
                 .signWith(getPrivateKey())
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
@@ -51,7 +60,6 @@ public class JwtProvider {
 
     private Key getPrivateKey() {
         try{
-            System.out.println("Key: " + keyStore.getKey("springblog", "secret".toCharArray()));
             return keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e){
             throw new SpringGomitoException("Exception occured while retrieving public key from keystore", e);
