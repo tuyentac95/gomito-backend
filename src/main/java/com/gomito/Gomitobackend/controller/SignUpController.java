@@ -24,4 +24,5 @@ public class SignUpController {
         authService.verifyAccount(token);
         return new ResponseEntity<>("Tài khoản được kích hoạt thành công", HttpStatus.OK);
     }
+
 }

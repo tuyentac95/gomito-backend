@@ -1,14 +1,21 @@
 package com.gomito.Gomitobackend.service;
 
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
+import com.gomito.Gomitobackend.dto.AuthenticationResponse;
+import com.gomito.Gomitobackend.dto.LoginRequest;
 import com.gomito.Gomitobackend.dto.SignUpRequest;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.model.NotificationEmail;
 import com.gomito.Gomitobackend.model.VerificationToken;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.VerificationTokenRepository;
+import com.gomito.Gomitobackend.security.JwtProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +30,9 @@ public class AuthService {
     private final GUserRepository gUserRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private final MailService mailService;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void signUp(SignUpRequest signUpRequest) {
@@ -39,8 +48,9 @@ public class AuthService {
                 gUser.getEmail(),"Thank you for signing up to Spring Reddit, " +
                 "please click on the below url to activate your account : " +
                 "http://localhost:8080/auth/accountVerification/" + token));
-        
     }
+
+
 
     private String generateVerificationToken(GUser gUser) {
         String token = UUID.randomUUID().toString();
@@ -54,6 +64,14 @@ public class AuthService {
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    public AuthenticationResponse login(LoginRequest loginRequest){
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        String authenticationToken = jwtProvider.generateToken(authenticate);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
     }
 
     public void verifyAccount(String token){

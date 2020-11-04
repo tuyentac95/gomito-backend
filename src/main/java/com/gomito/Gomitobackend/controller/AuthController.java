@@ -1,9 +1,13 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.AuthenticationResponse;
+import com.gomito.Gomitobackend.dto.LoginRequest;
 import com.gomito.Gomitobackend.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("api/auth")
