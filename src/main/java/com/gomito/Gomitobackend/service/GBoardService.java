@@ -18,12 +18,17 @@ public class GBoardService {
     @Autowired
     private GUserRepository gUserRepository;
 
+    @Autowired
+    private AuthService authService;
+
     public List<GBoard> findAllBoardByUserId(Long id){
         GUser user = gUserRepository.findById(id).orElse(null);
         return gBoardRepository.findAllByUser(user);
     }
 
     public void save(GBoard gBoard){
+        GUser currentUser = authService.getCurrentUser();
+        gBoard.setUser(currentUser);
         gBoardRepository.save(gBoard);
     }
 

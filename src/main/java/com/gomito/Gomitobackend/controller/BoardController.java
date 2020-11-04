@@ -24,9 +24,9 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(gboards);
     }
 
-    @PostMapping
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Void> createBoard(@RequestBody GBoard gBoard, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating Board" + gBoard.getBoardName());
+        System.out.println("Creating Board: " + gBoard.getBoardName());
         gBoardService.save(gBoard);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/api/boards/{id}").buildAndExpand(gBoard.getBoardId()).toUri());
