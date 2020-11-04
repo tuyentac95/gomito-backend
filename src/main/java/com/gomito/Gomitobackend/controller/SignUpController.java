@@ -18,12 +18,14 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/auth")
+@CrossOrigin("*")
 public class SignUpController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest){
+        System.out.println(signUpRequest);
     authService.signUp(signUpRequest);
     return new ResponseEntity<>("Bạn đăng ký thành công", HttpStatus.OK);
     }
