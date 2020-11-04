@@ -23,4 +23,8 @@ public class GBoardService {
         return gBoardRepository.findAllByUser(user);
     }
 
+    public void save(GBoard gBoard){
+        gBoardRepository.save(gBoard);
+    }
+
 }
