@@ -33,5 +33,4 @@ public class SignUpController {
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest){
         return authService.login(loginRequest);
     }
-
 }
