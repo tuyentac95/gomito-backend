@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/auth")
+@CrossOrigin("*")
 public class SignUpController {
     private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest){
+        System.out.println(signUpRequest);
     authService.signUp(signUpRequest);
     return new ResponseEntity<>("Bạn đăng ký thành công", HttpStatus.OK);
     }
