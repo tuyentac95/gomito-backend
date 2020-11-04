@@ -1,6 +1,6 @@
 package com.gomito.Gomitobackend.config;
 
-import com.gomito.Gomitobackend.security.JwtAnthenticationFilter;
+import com.gomito.Gomitobackend.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
-    private final JwtAnthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override

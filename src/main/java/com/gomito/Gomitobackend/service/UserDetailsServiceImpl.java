@@ -17,7 +17,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 @Service
 @AllArgsConstructor
-public class UserDetailsServicelmpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     private final GUserRepository gUserRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
