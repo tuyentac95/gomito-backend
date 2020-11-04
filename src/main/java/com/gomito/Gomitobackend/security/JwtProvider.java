@@ -31,7 +31,7 @@ public class JwtProvider {
     public void init(){
         try{
             keyStore =KeyStore.getInstance("JKS");
-            InputStream resourceAsStream = getClass().getResourceAsStream("/springgomito.jks");
+            InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException| IOException e){
             throw new SpringGomitoException("Exception occurred while loading keystore", e);
@@ -51,8 +51,8 @@ public class JwtProvider {
 
     private Key getPrivateKey() {
         try{
-            System.out.println("Key: " + keyStore.getKey("springgomito", "secret".toCharArray()));
-            return keyStore.getKey("springgomito", "secret".toCharArray());
+            System.out.println("Key: " + keyStore.getKey("springblog", "secret".toCharArray()));
+            return keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e){
             throw new SpringGomitoException("Exception occured while retrieving public key from keystore", e);
         }
@@ -66,7 +66,7 @@ public class JwtProvider {
 
     private PublicKey getPublicKey() {
         try {
-            return keyStore.getCertificate("springgomito").getPublicKey();
+            return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
             throw new SpringGomitoException("Exception occured while " +
                     "retrieving public key from keystore", e);
