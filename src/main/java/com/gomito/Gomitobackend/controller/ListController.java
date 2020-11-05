@@ -8,11 +8,9 @@ import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GCardService;
 import com.gomito.Gomitobackend.service.GListService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -23,8 +21,10 @@ public class ListController {
 
     @Autowired
     GBoardService gBoardService;
+
     @Autowired
     GCardService gCardService;
+
     @Autowired
     GListService gListService;
 
@@ -38,10 +38,8 @@ public class ListController {
     public ResponseEntity<GList> createList(@RequestBody GListDto listDto) {
         GList glist = new GList();
         glist.setListName(listDto.getListName());
-
         GBoard gBoard = gBoardService.findById(listDto.getBoardId());
         glist.setBoard(gBoard);
-
         GList gList = gListService.save(glist);
         return ResponseEntity.status(HttpStatus.CREATED).body(gList);
 
