@@ -24,4 +24,8 @@ public class GListService {
                 .orElseThrow(() -> new SpringGomitoException("Ko tim thay board voi id la " + id));
         return gListRepository.findAllByBoard(board);
     }
+
+    public GList save(GList glist) {
+        return gListRepository.save(glist);
+    }
 }

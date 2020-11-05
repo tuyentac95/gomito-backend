@@ -1,6 +1,7 @@
 package com.gomito.Gomitobackend.service;
 
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
+import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GCard;
 import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.repository.GCardRepository;
