@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class GList {
     private String listName;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private GBoard board;
 
 }

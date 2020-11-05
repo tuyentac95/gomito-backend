@@ -1,9 +1,13 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.model.GBoard;
+import com.gomito.Gomitobackend.model.GCard;
+import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.service.AuthService;
 import com.gomito.Gomitobackend.service.GBoardService;
+import com.gomito.Gomitobackend.service.GCardService;
+import com.gomito.Gomitobackend.service.GListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,18 @@ public class BoardController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private GListService gListService;
+
+    @Autowired
+    private GCardService gCardService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<GList>> findAllListByBoardId(@PathVariable Long id) {
+        List<GList> lists = gListService.findAllListByBoardId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(lists);
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Void> createBoard(@RequestBody GBoard gBoard, UriComponentsBuilder ucBuilder) {
