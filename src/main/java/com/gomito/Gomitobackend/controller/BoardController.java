@@ -24,18 +24,6 @@ public class BoardController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<GBoard>> findAllBoardByUserId(@PathVariable Long id) {
-        GUser user = authService.getCurrentUser();
-        if (user.getUserId().equals(id)) {
-            List<GBoard> gboards = gBoardService.findAllBoardByUserId(id);
-            return ResponseEntity.status(HttpStatus.OK).body(gboards);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-
-    }
-
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Void> createBoard(@RequestBody GBoard gBoard, UriComponentsBuilder ucBuilder) {
         System.out.println("Creating Board: " + gBoard.getBoardName());
