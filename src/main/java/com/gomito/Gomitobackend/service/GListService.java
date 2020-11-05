@@ -28,4 +28,9 @@ public class GListService {
     public GList save(GList glist) {
         return gListRepository.save(glist);
     }
+
+    public GList findById(Long listId) {
+        return gListRepository.findById(listId).
+                orElseThrow(()-> new SpringGomitoException("Khong tim thay List:" +listId));
+    }
 }
