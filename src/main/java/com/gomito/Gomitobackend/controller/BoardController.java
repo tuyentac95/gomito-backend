@@ -36,8 +36,18 @@ public class BoardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<GList>> findAllListByBoardId(@PathVariable Long id) {
-        List<GList> lists = gListService.findAllListByBoardId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(lists);
+        GBoard board = gBoardService.findById(id);
+        GUser user = board.getUser();
+        GUser currentUser = authService.getCurrentUser();
+
+        if (user.getUserId().equals(currentUser.getUserId())) {
+            List<GList> lists = gListService.findAllListByBoardId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(lists);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
