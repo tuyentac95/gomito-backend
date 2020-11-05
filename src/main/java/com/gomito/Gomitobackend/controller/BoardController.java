@@ -49,4 +49,18 @@ public class BoardController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<GBoard> updateBoard(@PathVariable Long id, @RequestBody GBoard gBoard) {
+        System.out.println("Update Board: " + gBoard.getBoardName());
+        GBoard currentBoard = gBoardService.findById(id);
+        if (currentBoard == null) {
+            System.out.println("Board with id:" + id + "not found");
+            return new ResponseEntity<GBoard>(currentBoard, HttpStatus.NOT_FOUND);
+        }
+        currentBoard.setBoardName(gBoard.getBoardName());
+        currentBoard.setBoardId(gBoard.getBoardId());
+        gBoardService.save(gBoard);
+        return new ResponseEntity<GBoard>(currentBoard, HttpStatus.OK);
+    }
+
 }
