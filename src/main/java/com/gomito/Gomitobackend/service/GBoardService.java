@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.service;
 
+import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.repository.GBoardRepository;
@@ -32,4 +33,8 @@ public class GBoardService {
         gBoardRepository.save(gBoard);
     }
 
+    public GBoard findById(Long boardId) {
+        return gBoardRepository.findById(boardId)
+                .orElseThrow(() -> new SpringGomitoException("KO tim thay Board: " + boardId));
+    }
 }
