@@ -76,11 +76,15 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
 
+        GUser user = gUserRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new SpringGomitoException("User not found with name " + loginRequest.getUsername()));
+
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(loginRequest.getUsername())
+                .userId(user.getUserId())
                 .build();
     }
 
@@ -102,11 +106,16 @@ public class AuthService {
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
         String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+
+        GUser user = gUserRepository.findByUsername(refreshTokenRequest.getUsername())
+                .orElseThrow(() -> new SpringGomitoException("User not found with name " + refreshTokenRequest.getUsername()));
+
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenRequest.getRefreshToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(refreshTokenRequest.getUsername())
+                .userId(user.getUserId())
                 .build();
     }
 
