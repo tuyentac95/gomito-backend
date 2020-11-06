@@ -33,6 +33,11 @@ public class GCardService {
     public Integer findMaxIndex(Long listId) {
         GList list = gListRepository.findById(listId)
                 .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + listId));
-        return gCardRepository.findFirstByListOrderByCardIndex(list).getCardIndex();
+        GCard cardMaxIndex = gCardRepository.findFirstByListOrderByCardIndex(list)
+                .orElse(null);
+        if(cardMaxIndex != null) {
+            return cardMaxIndex.getCardIndex();
+        }
+        return -1;
     }
 }
