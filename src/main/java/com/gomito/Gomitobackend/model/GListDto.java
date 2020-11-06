@@ -11,4 +11,5 @@ public class GListDto {
    private Long listId;
    private String listName;
    private Long boardId;
+   private Integer listIndex;
 }
