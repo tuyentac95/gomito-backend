@@ -21,6 +21,4 @@ public class GBoard {
     @JsonIgnore
     private GUser user;
 
-    public GBoard(Long boardId) {
-    }
 }
