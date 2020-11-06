@@ -19,7 +19,7 @@ public class CardController {
     private GListService gListService;
 
     @Autowired
-            private GCardService gCardService;
+    private GCardService gCardService;
 
     @PostMapping("/")
         public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
@@ -27,6 +27,9 @@ public class CardController {
             gcard.setCardName(cardDto.getCardName());
             GList gList = gListService.findById(cardDto.getListId());
             gcard.setList(gList);
+
+            Integer maxIndex = gCardService.findMaxIndex(cardDto.getListId());
+            gcard.setCardIndex(maxIndex+1);
             GCard gCard = gCardService.save(gcard);
             return ResponseEntity.status(HttpStatus.CREATED).body(gCard);
         }
