@@ -42,18 +42,43 @@ public class ListController {
         glist.setBoard(gBoard);
 
         Integer maxIndex = gListService.findMaxIndex(listDto.getBoardId());
-        glist.setListIndex(maxIndex+1);
+        glist.setListIndex(maxIndex + 1);
         GList gList = gListService.save(glist);
         return ResponseEntity.status(HttpStatus.CREATED).body(gList);
     }
 
     @PostMapping("/updateIndex")
-    public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists){
-        for (GListDto list: updateLists){
-            GList gList = gListService.findById(list.getListId());
-            gList.setListIndex(list.getListIndex());
-            gListService.save(gList);
+    public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists) {
+        Long boardId = getBoardId(updateLists);
+        if (boardId > 0) {
+            if (checkUserId(boardId)) {
+                for (GListDto list : updateLists) {
+                    GList gList = gListService.findById(list.getListId());
+                    gList.setListIndex(list.getListIndex());
+                    gListService.save(gList);
+                    return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
+            }
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+
+    }
+
+    private Long getBoardId(List<GListDto> updateLists) {
+        GList gList = gListService.findById(updateLists.get(0).getListId());
+        Long boardId = gList.getBoard().getBoardId();
+        for (GListDto list:  updateLists){
+            GList gListNew = gListService.findById(list.getListId());
+            Long boardIdNew = gListNew.getBoard().getBoardId();
+            if (!boardIdNew.equals(boardId)) {
+                return -1L;
+            }
+        }
+        return boardId;
+    }
+
+    private boolean checkUserId(Long boardId) {
+
     }
 }
