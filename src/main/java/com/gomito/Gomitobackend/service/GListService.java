@@ -44,12 +44,16 @@ public class GListService {
         GBoard gBoard = gBoardRepository.findById(boardId)
                 .orElseThrow(() -> new SpringGomitoException("Ko tìm thấy board"));
         List<GList> lists = gListRepository.findAllByBoard(gBoard);
-        Integer maxIndex = lists.get(0).getListIndex();
-        for ( int i  = 1; i < lists.size(); i ++ ){
-            if (maxIndex < lists.get(i).getListIndex()){
-                maxIndex = lists.get(i).getListIndex();
+        if (lists.size() > 0) {
+            Integer maxIndex = lists.get(0).getListIndex();
+            for ( int i  = 1; i < lists.size(); i ++ ){
+                if (maxIndex < lists.get(i).getListIndex()){
+                    maxIndex = lists.get(i).getListIndex();
+                }
             }
+            return maxIndex;
+        } else {
+            return -1;
         }
-        return maxIndex;
     }
 }

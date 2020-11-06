@@ -40,11 +40,36 @@ public class CardController {
     public ResponseEntity<String> updateCardIndex(@RequestBody List<GCardDto> updateCards){
         Long listId = getListId(updateCards);
         if (listId > 0){
-            GList list = gListService.findById(listId);
-            Long boardId = list
+            Long boardId = getBoardId(listId);
             if(boardId > 0){
 
             }
         }
         }
+
+//    private Long getBoardId(Long listId) {
+//        GCard gCard = gCardService.findById(updateCards.get(0).getCardId());
+//        Long listId = gCard.getList().getListId();
+//        for (GCardDto card: updateCards){
+//            GCard gCardNew = gCardService.findById(card.getCardId());
+//            Long listIdNew = gCardNew.getList().getListId();
+//            if (!listIdNew.equals(listId)){
+//                return -1L;
+//            }
+//        }
+//        return listId;
+//    }
+
+    private Long getListId(List<GCardDto> updateCards) {
+        GCard gCard = gCardService.findById(updateCards.get(0).getCardId());
+        Long listId = gCard.getList().getListId();
+        for (GCardDto card: updateCards){
+            GCard gCardNew = gCardService.findById(card.getCardId());
+            Long listIdNew = gCardNew.getList().getListId();
+            if (!listIdNew.equals(listId)){
+                return -1L;
+            }
+        }
+        return listId;
+    }
 }

@@ -49,15 +49,21 @@ public class ListController {
 
     @PostMapping("/updateIndex")
     public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists) {
+        System.out.println(updateLists);
         Long boardId = getBoardId(updateLists);
+        System.out.println("Check boardId " + boardId);
         if (boardId > 0) {
+            System.out.println("check user id: " + checkUserId(boardId));
             if (checkUserId(boardId)) {
                 for (GListDto list : updateLists) {
+                    System.out.println("check list " + list);
                     GList gList = gListService.findById(list.getListId());
                     gList.setListIndex(list.getListIndex());
-                    gListService.save(gList);
-                    return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+                    System.out.println("check glist: " + gList);
+                    GList saveList = gListService.save(gList);
+                    System.out.println("check save listL " + saveList);
                 }
+                return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
             }

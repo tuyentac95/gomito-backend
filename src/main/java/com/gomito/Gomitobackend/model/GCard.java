@@ -23,5 +23,4 @@ public class GCard {
     @JsonIgnore
     private GList list;
     private Integer cardIndex;
-
 }
