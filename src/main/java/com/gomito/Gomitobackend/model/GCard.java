@@ -22,6 +22,4 @@ public class GCard {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private GList list;
-
-
 }
