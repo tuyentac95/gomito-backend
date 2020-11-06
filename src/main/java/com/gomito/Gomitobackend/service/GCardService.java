@@ -24,4 +24,8 @@ public class GCardService {
         GList list = gListRepository.findById(id).orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + id));
         return gCardRepository.findAllByList(list);
     }
+
+    public GCard save(GCard gcard) {
+        return gCardRepository.save(gcard);
+    }
 }
