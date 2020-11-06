@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cards")
 @CrossOrigin("*")
@@ -32,5 +34,17 @@ public class CardController {
             gcard.setCardIndex(maxIndex+1);
             GCard gCard = gCardService.save(gcard);
             return ResponseEntity.status(HttpStatus.CREATED).body(gCard);
+        }
+
+        @PostMapping("/updateIndex")
+    public ResponseEntity<String> updateCardIndex(@RequestBody List<GCardDto> updateCards){
+        Long listId = getListId(updateCards);
+        if (listId > 0){
+            GList list = gListService.findById(listId);
+            Long boardId = list
+            if(boardId > 0){
+
+            }
+        }
         }
 }

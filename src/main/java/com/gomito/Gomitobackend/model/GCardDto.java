@@ -11,4 +11,5 @@ public class GCardDto {
     private Long cardId;
     private String cardName;
     private Long listId;
+    private Integer cardIndex;
 }
