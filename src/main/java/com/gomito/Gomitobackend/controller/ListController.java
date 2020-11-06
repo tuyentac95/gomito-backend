@@ -11,8 +11,10 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 @RestController
@@ -41,12 +43,22 @@ public class ListController {
         glist.setListName(listDto.getListName());
         GBoard gBoard = gBoardService.findById(listDto.getBoardId());
         glist.setBoard(gBoard);
-
         Integer maxIndex = gListService.findMaxIndex(listDto.getBoardId());
         glist.setListIndex(maxIndex+1);
         GList gList = gListService.save(glist);
         return ResponseEntity.status(HttpStatus.CREATED).body(gList);
     }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<GList> saveList(@RequestBody GList gList){
+        GList list = gListService.findById(gList.getListId());
+        list.setListName(gList.getListName());
+        gListService.save(list);
+       return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+
 
 
 }
