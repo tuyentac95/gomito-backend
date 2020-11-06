@@ -7,7 +7,6 @@ import com.gomito.Gomitobackend.model.GListDto;
 import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GCardService;
 import com.gomito.Gomitobackend.service.GListService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +47,13 @@ public class ListController {
         return ResponseEntity.status(HttpStatus.CREATED).body(gList);
     }
 
-
+    @PutMapping("/updateIndex")
+    public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists){
+        for (GListDto list: updateLists){
+            GList gList = gListService.findById(list.getListId());
+            gList.setListIndex(list.getListIndex());
+            gListService.save(gList);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+    }
 }
