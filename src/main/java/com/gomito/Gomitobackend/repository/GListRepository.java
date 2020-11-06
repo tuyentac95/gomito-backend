@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface GListRepository extends JpaRepository<GList, Long> {
     List<GList> findAllByBoard(GBoard board);
+    List<GList> findAllByBoardOrderByListIndex(GBoard board);
 }
