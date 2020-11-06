@@ -1,9 +1,7 @@
 package com.gomito.Gomitobackend.controller;
 
-import com.gomito.Gomitobackend.model.GBoard;
-import com.gomito.Gomitobackend.model.GCard;
-import com.gomito.Gomitobackend.model.GList;
-import com.gomito.Gomitobackend.model.GListDto;
+import com.gomito.Gomitobackend.model.*;
+import com.gomito.Gomitobackend.service.AuthService;
 import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GCardService;
 import com.gomito.Gomitobackend.service.GListService;
@@ -18,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/lists")
 @CrossOrigin("*")
 public class ListController {
-
     @Autowired
     GBoardService gBoardService;
 
@@ -27,6 +24,9 @@ public class ListController {
 
     @Autowired
     GListService gListService;
+
+    @Autowired
+    AuthService authService;
 
     @GetMapping("/{id}")
     public ResponseEntity<List<GCard>> findAllCardByListId(@PathVariable Long id) {
@@ -62,7 +62,7 @@ public class ListController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
             }
         }
-
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
     }
 
     private Long getBoardId(List<GListDto> updateLists) {
@@ -79,6 +79,9 @@ public class ListController {
     }
 
     private boolean checkUserId(Long boardId) {
-
+        GBoard gBoard = gBoardService.findById(boardId);
+        GUser checkUser = gBoard.getUser();
+        GUser authUser = authService.getCurrentUser();
+        return (checkUser.getUserId().equals(authUser.getUserId()));
     }
 }
