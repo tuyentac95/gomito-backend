@@ -47,7 +47,7 @@ public class ListController {
         return ResponseEntity.status(HttpStatus.CREATED).body(gList);
     }
 
-    @PutMapping("/updateIndex")
+    @PostMapping("/updateIndex")
     public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists){
         for (GListDto list: updateLists){
             GList gList = gListService.findById(list.getListId());
