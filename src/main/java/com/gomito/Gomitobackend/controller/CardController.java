@@ -25,9 +25,14 @@ public class CardController {
         public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
             GCard gcard = new GCard();
             gcard.setCardName(cardDto.getCardName());
+
             GList gList = gListService.findById(cardDto.getListId());
             gcard.setList(gList);
-            GCard gCard = gCardService.save(gcard);
-            return ResponseEntity.status(HttpStatus.CREATED).body(gCard);
+
+            Integer maxIndex = gCardService.findMaxIndex(cardDto.getListId());
+            gcard.setCardIndex(maxIndex + 1);
+
+            GCard card = gCardService.save(gcard);
+            return ResponseEntity.status(HttpStatus.CREATED).body(card);
         }
 }

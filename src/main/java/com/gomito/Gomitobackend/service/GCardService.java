@@ -21,11 +21,18 @@ public class GCardService {
     private GListRepository gListRepository;
 
     public List<GCard> findAllCardByListId(Long id) {
-        GList list = gListRepository.findById(id).orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + id));
+        GList list = gListRepository.findById(id)
+                .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + id));
         return gCardRepository.findAllByList(list);
     }
 
     public GCard save(GCard gcard) {
         return gCardRepository.save(gcard);
+    }
+
+    public Integer findMaxIndex(Long listId) {
+        GList list = gListRepository.findById(listId)
+                .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + listId));
+        return gCardRepository.findFirstByListOrderByCardIndex(list).getCardIndex();
     }
 }

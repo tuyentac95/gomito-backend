@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface GCardRepository extends JpaRepository<GCard, Long> {
     List<GCard> findAllByList(GList gList);
+    GCard findFirstByListOrderByCardIndex(GList list);
 }
