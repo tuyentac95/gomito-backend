@@ -22,4 +22,5 @@ public class GList {
     @JsonIgnore
     private GBoard board;
 
+    private Integer listIndex;
 }

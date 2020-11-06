@@ -42,6 +42,5 @@ public class ListController {
         glist.setBoard(gBoard);
         GList gList = gListService.save(glist);
         return ResponseEntity.status(HttpStatus.CREATED).body(gList);
-
     }
 }
