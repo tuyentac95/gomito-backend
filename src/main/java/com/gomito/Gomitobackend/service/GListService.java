@@ -43,7 +43,8 @@ public class GListService {
 
 
     public Integer findMaxIndex(Long boardId) {
-        GBoard gBoard = new GBoard(boardId);
+        GBoard gBoard = gBoardRepository.findById(boardId)
+                .orElseThrow(() -> new SpringGomitoException("Ko tim thay board voi id la " + boardId));
         List<GList> lists = gListRepository.findAllByBoard(gBoard);
         Integer maxIndex = lists.get(0).getListIndex();
         for ( int i  = 1; i < lists.size(); i ++ ){
