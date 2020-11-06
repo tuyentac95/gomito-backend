@@ -41,7 +41,7 @@ public class BoardController {
         GUser currentUser = authService.getCurrentUser();
 
         if (user.getUserId().equals(currentUser.getUserId())) {
-            List<GList> lists = gListService.findAllListByBoardId(id);
+            List<GList> lists = gListService.findAllByBoardAndOrderByListIndex(id);
             return ResponseEntity.status(HttpStatus.OK).body(lists);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

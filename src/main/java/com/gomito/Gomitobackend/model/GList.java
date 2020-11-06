@@ -21,5 +21,6 @@ public class GList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private GBoard board;
+
     private Integer listIndex;
 }
