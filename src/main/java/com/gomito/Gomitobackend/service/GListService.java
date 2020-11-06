@@ -33,4 +33,12 @@ public class GListService {
         return gListRepository.findById(listId).
                 orElseThrow(()-> new SpringGomitoException("Khong tim thay List:" +listId));
     }
+
+    public List<GList> findAllByBoardAndOrderByListIndex(Long id) {
+        GBoard board = gBoardRepository.findById(id)
+                .orElseThrow(() -> new SpringGomitoException("Ko tim thay board voi id la " + id));
+        return gListRepository.findAllByBoardOrderByListIndex(board);
+    }
+
+
 }
