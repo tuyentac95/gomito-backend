@@ -85,4 +85,16 @@ public class CardController {
         }
         return listId;
     }
+
+    @PostMapping("updateIndexOfCardInAnotherList")
+    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto){
+        for (GCardDto cardDto: listGCarDto){
+            GCard gCard = gCardService.findById(cardDto.getCardId());
+            GList gList = gListService.findById(cardDto.getListId());
+            gCard.setList(gList);
+            gCard.setCardIndex(cardDto.getCardIndex());
+            gCardService.save(gCard);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+    }
 }
