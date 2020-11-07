@@ -1,13 +1,15 @@
 package com.gomito.Gomitobackend.service;
 
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
-import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GCard;
+import com.gomito.Gomitobackend.model.GCardDto;
 import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -30,16 +32,16 @@ public class GCardService {
         return gCardRepository.save(gcard);
     }
 
-    public Integer findMaxIndex(Long listId) {
-        GList list = gListRepository.findById(listId)
-                .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + listId));
-        GCard cardMaxIndex = gCardRepository.findFirstByListOrderByCardIndexDesc(list)
-                .orElse(null);
-        if(cardMaxIndex != null) {
-            return cardMaxIndex.getCardIndex();
-        }
-        return -1;
-    }
+//    public Integer findMaxIndex(Long listId) {
+//        GList list = gListRepository.findById(listId)
+//                .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + listId));
+//        GCard cardMaxIndex = gCardRepository.findFirstByListOrderByCardIndexDesc(list)
+//                .orElse(null);
+//        if(cardMaxIndex != null) {
+//            return cardMaxIndex.getCardIndex();
+//        }
+//        return -1;
+//    }
 
     public GCard findById(Long cardId){
         return gCardRepository.findById(cardId)
@@ -52,16 +54,23 @@ public class GCardService {
         return gCardRepository.findAllByListOrderByCardIndex(list);
     }
 
-//    public Integer findMaxIndex(Long listId){
-//        GList gList = gListRepository.findById(listId)
-//                .orElseThrow(() -> new SpringGomitoException("Không tìm thấy list"));
-//        List<GCard> cards = gCardRepository.findAllByList(gList);
-//        Integer maxIndex = cards.get(0).getCardIndex();
-//        for (int i =0; i < cards.size();i++){
-//            if (maxIndex < cards.get(i).getCardIndex()){
-//                maxIndex = cards.get(i).getCardIndex();
-//            }
-//        }
-//        return maxIndex;
-//    }
+    public Integer findMaxIndex(Long listId){
+        GList gList = gListRepository.findById(listId)
+                .orElseThrow(() -> new SpringGomitoException("Không tìm thấy list"));
+        List<GCard> cards = gCardRepository.findAllByList(gList);
+        if(cards.size() >0){
+            Integer maxIndex = cards.get(0).getCardIndex();
+            for (int i =0; i < cards.size();i++){
+                if (maxIndex < cards.get(i).getCardIndex()){
+                    maxIndex = cards.get(i).getCardIndex();
+                }
+            }
+            return maxIndex;
+        } else {
+            return -1;
+        }
+    }
+
+
+
 }
