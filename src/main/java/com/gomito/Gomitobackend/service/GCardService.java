@@ -30,16 +30,16 @@ public class GCardService {
         return gCardRepository.save(gcard);
     }
 
-    public Integer findMaxIndex(Long listId) {
-        GList list = gListRepository.findById(listId)
-                .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + listId));
-        GCard cardMaxIndex = gCardRepository.findFirstByListOrderByCardIndexDesc(list)
-                .orElse(null);
-        if(cardMaxIndex != null) {
-            return cardMaxIndex.getCardIndex();
-        }
-        return -1;
-    }
+//    public Integer findMaxIndex(Long listId) {
+//        GList list = gListRepository.findById(listId)
+//                .orElseThrow(() -> new SpringGomitoException("Ko tim thay list voi id la " + listId));
+//        GCard cardMaxIndex = gCardRepository.findFirstByListOrderByCardIndexDesc(list)
+//                .orElse(null);
+//        if(cardMaxIndex != null) {
+//            return cardMaxIndex.getCardIndex();
+//        }
+//        return -1;
+//    }
 
     public GCard findById(Long cardId){
         return gCardRepository.findById(cardId)
@@ -52,16 +52,20 @@ public class GCardService {
         return gCardRepository.findAllByListOrderByCardIndex(list);
     }
 
-//    public Integer findMaxIndex(Long listId){
-//        GList gList = gListRepository.findById(listId)
-//                .orElseThrow(() -> new SpringGomitoException("Không tìm thấy list"));
-//        List<GCard> cards = gCardRepository.findAllByList(gList);
-//        Integer maxIndex = cards.get(0).getCardIndex();
-//        for (int i =0; i < cards.size();i++){
-//            if (maxIndex < cards.get(i).getCardIndex()){
-//                maxIndex = cards.get(i).getCardIndex();
-//            }
-//        }
-//        return maxIndex;
-//    }
+    public Integer findMaxIndex(Long listId){
+        GList gList = gListRepository.findById(listId)
+                .orElseThrow(() -> new SpringGomitoException("Không tìm thấy list"));
+        List<GCard> cards = gCardRepository.findAllByList(gList);
+        if(cards.size() >0){
+            Integer maxIndex = cards.get(0).getCardIndex();
+            for (int i =0; i < cards.size();i++){
+                if (maxIndex < cards.get(i).getCardIndex()){
+                    maxIndex = cards.get(i).getCardIndex();
+                }
+            }
+            return maxIndex;
+        } else {
+            return -1;
+        }
+    }
 }
