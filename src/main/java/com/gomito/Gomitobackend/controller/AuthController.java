@@ -24,7 +24,7 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest){
+    public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest){
         System.out.println(signUpRequest);
         authService.signUp(signUpRequest);
         return new ResponseEntity<>("Bạn đăng ký thành công", HttpStatus.OK);
