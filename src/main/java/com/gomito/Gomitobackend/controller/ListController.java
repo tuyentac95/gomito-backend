@@ -30,7 +30,7 @@ public class ListController {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<GCard>> findAllCardByListId(@PathVariable Long id) {
-        List<GCard> cards = gCardService.findAllCardByListId(id);
+        List<GCard> cards = gCardService.findALlByListIdAndOrderByCardIndex(id);
         return ResponseEntity.status(HttpStatus.OK).body(cards);
     }
 
