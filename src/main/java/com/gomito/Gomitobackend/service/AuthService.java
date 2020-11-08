@@ -71,21 +71,32 @@ public class AuthService {
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
-                loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtProvider.generateToken(authentication);
-
         GUser user = gUserRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new SpringGomitoException("User not found with name " + loginRequest.getUsername()));
+                .orElse(null);
 
-        return AuthenticationResponse.builder()
-                .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
-                .username(loginRequest.getUsername())
-                .userId(user.getUserId())
-                .build();
+        if (user != null) {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                    loginRequest.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtProvider.generateToken(authentication);
+
+            return AuthenticationResponse.builder()
+                    .authenticationToken(token)
+                    .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                    .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                    .username(loginRequest.getUsername())
+                    .userId(user.getUserId())
+                    .status(200)
+                    .message("Login successful")
+                    .build();
+        } else {
+            return AuthenticationResponse.builder()
+                    .status(404)
+                    .message("username not found")
+                    .build();
+        }
     }
 
     public void verifyAccount(String token){
@@ -120,7 +131,19 @@ public class AuthService {
     }
 
     public GUser getCurrentUser() {
-        User pricipal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return gUserRepository.findByUsername(pricipal.getUsername()).orElse(null);
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return gUserRepository.findByUsername(principal.getUsername()).orElse(null);
+    }
+
+    public boolean userNotExist(SignUpRequest signUpRequest) {
+        GUser user = gUserRepository.findByUsername(signUpRequest.getUsername())
+                .orElse(null);
+
+        if (user == null) {
+            GUser gUser = gUserRepository.findByEmail(signUpRequest.getEmail())
+                    .orElse(null);
+            return (gUser == null);
+        }
+        return false;
     }
 }

@@ -46,8 +46,6 @@ public class BoardController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-
-
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -65,12 +63,12 @@ public class BoardController {
         GBoard currentBoard = gBoardService.findById(id);
         if (currentBoard == null) {
             System.out.println("Board with id:" + id + "not found");
-            return new ResponseEntity<GBoard>(currentBoard, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         currentBoard.setBoardName(gBoard.getBoardName());
         currentBoard.setBoardId(gBoard.getBoardId());
         gBoardService.save(gBoard);
-        return new ResponseEntity<GBoard>(currentBoard, HttpStatus.OK);
+        return new ResponseEntity<>(currentBoard, HttpStatus.OK);
     }
 
 }

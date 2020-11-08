@@ -29,27 +29,27 @@ public class CardController {
     AuthService authService;
 
     @PostMapping("/")
-        public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
-            GCard gcard = new GCard();
-            gcard.setCardName(cardDto.getCardName());
+    public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
+        GCard gcard = new GCard();
+        gcard.setCardName(cardDto.getCardName());
 
-            GList gList = gListService.findById(cardDto.getListId());
-            gcard.setList(gList);
+        GList gList = gListService.findById(cardDto.getListId());
+        gcard.setList(gList);
 
-            Integer maxIndex = gCardService.findMaxIndex(cardDto.getListId());
-            gcard.setCardIndex(maxIndex + 1);
+        Integer maxIndex = gCardService.findMaxIndex(cardDto.getListId());
+        gcard.setCardIndex(maxIndex + 1);
 
-            GCard card = gCardService.save(gcard);
-            return ResponseEntity.status(HttpStatus.CREATED).body(card);
-        }
+        GCard card = gCardService.save(gcard);
+        return ResponseEntity.status(HttpStatus.CREATED).body(card);
+    }
 
-        @PostMapping("/updateIndex")
-    public ResponseEntity<String> updateCardIndex(@RequestBody List<GCardDto> updateCards){
+    @PostMapping("/updateIndex")
+    public ResponseEntity<String> updateCardIndex(@RequestBody List<GCardDto> updateCards) {
         Long listId = getListId(updateCards);
-        if (listId > 0){
+        if (listId > 0) {
             GList gList = gListService.findById(listId);
             Long boardIdNew = gList.getBoard().getBoardId();
-            if(boardIdNew > 0) {
+            if (boardIdNew > 0) {
                 if (checkUserId(boardIdNew)) {
                     for (GCardDto card : updateCards) {
                         GCard gCard = gCardService.findById(card.getCardId());
@@ -61,9 +61,9 @@ public class CardController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
                 }
             }
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
+    }
 
     private boolean checkUserId(Long boardIdNew) {
         GBoard gBoard = gBoardService.findById(boardIdNew);
@@ -72,14 +72,13 @@ public class CardController {
         return checkUser.getUserId().equals(authUser.getUserId());
     }
 
-
     private Long getListId(List<GCardDto> updateCards) {
         GCard gCard = gCardService.findById(updateCards.get(0).getCardId());
         Long listId = gCard.getList().getListId();
-        for (GCardDto card: updateCards){
+        for (GCardDto card : updateCards) {
             GCard gCardNew = gCardService.findById(card.getCardId());
             Long listIdNew = gCardNew.getList().getListId();
-            if (!listIdNew.equals(listId)){
+            if (!listIdNew.equals(listId)) {
                 return -1L;
             }
         }
