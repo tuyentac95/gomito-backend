@@ -15,10 +15,12 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+
 @Service
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final GUserRepository gUserRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<GUser> userOptional = gUserRepository.findByUsername(username);
@@ -26,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No user" + "Found with username : " + username));
         return new org.springframework.security
                 .core.userdetails.User(gUser.getUsername(), gUser.getPassword(),
-                gUser.isEnabled(), true,true,
+                gUser.isEnabled(), true, true,
                 true, getAuthorities("USER"));
     }
 
