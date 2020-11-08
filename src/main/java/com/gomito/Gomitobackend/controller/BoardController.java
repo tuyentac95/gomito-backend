@@ -49,12 +49,10 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Void> createBoard(@RequestBody GBoard gBoard, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<GBoard> createBoard(@RequestBody GBoard gBoard) {
         System.out.println("Creating Board: " + gBoard.getBoardName());
-        gBoardService.save(gBoard);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/boards/{id}").buildAndExpand(gBoard.getBoardId()).toUri());
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        GBoard newBoard = gBoardService.save(gBoard);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newBoard);
     }
 
     @PutMapping("/{id}")
