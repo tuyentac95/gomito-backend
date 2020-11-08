@@ -42,4 +42,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not allow to change password");
         }
     }
+
+    @GetMapping("")
+    public ResponseEntity<GUser> getUserInfo() {
+        GUser user = authService.getCurrentUser();
+        GUser responseUser = new GUser();
+        responseUser.setUsername(user.getUsername());
+        responseUser.setEmail(user.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(responseUser);
+    }
 }
