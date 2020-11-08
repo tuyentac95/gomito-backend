@@ -1,10 +1,7 @@
 package com.gomito.Gomitobackend.service;
 
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
-import com.gomito.Gomitobackend.dto.AuthenticationResponse;
-import com.gomito.Gomitobackend.dto.LoginRequest;
-import com.gomito.Gomitobackend.dto.RefreshTokenRequest;
-import com.gomito.Gomitobackend.dto.SignUpRequest;
+import com.gomito.Gomitobackend.dto.*;
 import com.gomito.Gomitobackend.model.GUser;
 
 import com.gomito.Gomitobackend.model.VerificationToken;
@@ -143,6 +140,18 @@ public class AuthService {
             GUser gUser = gUserRepository.findByEmail(signUpRequest.getEmail())
                     .orElse(null);
             return (gUser == null);
+        }
+        return false;
+    }
+
+    public boolean changePassword(ChangePasswordRequest request) {
+        GUser user = getCurrentUser();
+        LoginRequest loginRequest = new LoginRequest(user.getUsername(), request.getOldPassword());
+        AuthenticationResponse auth = login(loginRequest);
+        if (auth.getStatus() == 200) {
+            user.setPassword(encodePassword(request.getNewPassword()));
+            gUserRepository.save(user);
+            return true;
         }
         return false;
     }
