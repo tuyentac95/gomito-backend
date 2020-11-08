@@ -33,4 +33,5 @@ public class GUser {
     private Instant created;
 
     private boolean enabled;
+    
 }
