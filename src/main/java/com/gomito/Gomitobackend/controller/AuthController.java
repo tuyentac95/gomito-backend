@@ -24,30 +24,33 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity signUp(@RequestBody SignUpRequest signUpRequest){
-        System.out.println(signUpRequest);
-        authService.signUp(signUpRequest);
-        return new ResponseEntity<>("Bạn đăng ký thành công", HttpStatus.OK);
+    public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
+        if (authService.userNotExist(signUpRequest)) {
+            authService.signUp(signUpRequest);
+            return new ResponseEntity<>("Bạn đăng ký thành công", HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Người dùng đã tồn tại");
+        }
     }
 
     @GetMapping("/accountVerification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token){
+    public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
         return new ResponseEntity<>("Tài khoản được kích hoạt thành công", HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest){
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
 
     @PostMapping("refresh/token")
-    public AuthenticationResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
+    public AuthenticationResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
+    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         System.out.println(refreshTokenRequest);
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");

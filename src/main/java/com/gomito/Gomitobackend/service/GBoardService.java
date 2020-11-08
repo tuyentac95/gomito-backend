@@ -27,10 +27,10 @@ public class GBoardService {
         return gBoardRepository.findAllByUser(user);
     }
 
-    public void save(GBoard gBoard){
+    public GBoard save(GBoard gBoard){
         GUser currentUser = authService.getCurrentUser();
         gBoard.setUser(currentUser);
-        gBoardRepository.save(gBoard);
+        return gBoardRepository.save(gBoard);
     }
 
     public GBoard findById(Long boardId) {

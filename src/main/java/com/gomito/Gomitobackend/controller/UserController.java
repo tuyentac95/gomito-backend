@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.ChangePasswordRequest;
 import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.service.AuthService;
@@ -31,6 +32,23 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+    }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+        if(authService.changePassword(request)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Password change successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not allow to change password");
+        }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<GUser> getUserInfo() {
+        GUser user = authService.getCurrentUser();
+        GUser responseUser = new GUser();
+        responseUser.setUsername(user.getUsername());
+        responseUser.setEmail(user.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(responseUser);
     }
 }

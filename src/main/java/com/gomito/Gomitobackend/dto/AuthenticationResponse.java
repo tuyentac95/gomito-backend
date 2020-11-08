@@ -17,4 +17,6 @@ public class AuthenticationResponse {
     private Long userId;
     private String refreshToken;
     private Instant expiresAt;
+    private Integer status;
+    private String message;
 }
