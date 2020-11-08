@@ -134,4 +134,16 @@ public class AuthService {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return gUserRepository.findByUsername(principal.getUsername()).orElse(null);
     }
+
+    public boolean userNotExist(SignUpRequest signUpRequest) {
+        GUser user = gUserRepository.findByUsername(signUpRequest.getUsername())
+                .orElse(null);
+
+        if (user == null) {
+            GUser gUser = gUserRepository.findByEmail(signUpRequest.getEmail())
+                    .orElse(null);
+            return (gUser == null);
+        }
+        return false;
+    }
 }

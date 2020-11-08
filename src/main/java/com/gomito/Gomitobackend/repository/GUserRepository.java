@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface GUserRepository extends JpaRepository<GUser, Long> {
     Optional<GUser> findByUsername(String username);
+    Optional<GUser> findByEmail(String email);
 }
