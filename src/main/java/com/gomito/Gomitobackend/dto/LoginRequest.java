@@ -1,3 +1,4 @@
+
 package com.gomito.Gomitobackend.dto;
 
 import lombok.AllArgsConstructor;
@@ -10,5 +11,4 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
     private String username;
     private String password;
-    private Long status;
 }
