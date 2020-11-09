@@ -72,5 +72,9 @@ public class GCardService {
     }
 
 
+    public GCard findCardById(Long id) {
+        return gCardRepository.findById(id)
+                .orElse(null);
 
+    }
 }

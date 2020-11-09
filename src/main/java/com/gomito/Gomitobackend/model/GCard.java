@@ -18,6 +18,7 @@ public class GCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cardId;
     private String cardName;
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

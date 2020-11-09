@@ -96,4 +96,23 @@ public class CardController {
         }
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GCard> getCard(@PathVariable Long id) {
+        GCard card = gCardService.findCardById(id);
+        if (card != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(card);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/{id}/update")
+    public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto){
+        GCard card = gCardService.findById(gCardDto.getCardId());
+        card.setCardName(gCardDto.getCardName());
+        card.setDescription(gCardDto.getDescription());
+        GCard updateCard = gCardService.save(card);
+        return new ResponseEntity<>(updateCard, HttpStatus.OK);
+    }
 }
