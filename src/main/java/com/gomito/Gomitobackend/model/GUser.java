@@ -8,7 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -39,6 +39,6 @@ public class GUser {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
             inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "boardId"))
     @JsonIgnore
-    private Set<GBoard> boards;
+    private List<GBoard> boards;
     
 }

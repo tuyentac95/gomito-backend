@@ -34,16 +34,17 @@ public class GBoardService {
 
     public List<GBoard> findAllBoardByUserId(Long id){
         GUser user = gUserRepository.findById(id).orElse(null);
-        Collection<GUser> users = new HashSet<>();
-        users.add(user);
-        return gBoardRepository.findAllByUsersIn(users);
+        return user != null ? user.getBoards() : null;
+//        Collection<GUser> users = new HashSet<>();
+//        users.add(user);
+//        return gBoardRepository.findAllByUsersIn(users);
     }
 
     @Transactional
     public GBoard save(GBoard gBoard){
         GUser currentUser = authService.getCurrentUser();
         GBoard board = gBoardRepository.save(gBoard);
-        Set<GBoard> boards = currentUser.getBoards();
+        List<GBoard> boards = currentUser.getBoards();
         boards.add(board);
         currentUser.setBoards(boards);
         gUserRepository.save(currentUser);

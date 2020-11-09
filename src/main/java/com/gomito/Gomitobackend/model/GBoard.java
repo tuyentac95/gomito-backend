@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,8 +16,8 @@ public class GBoard {
     private Long boardId;
     private String boardName;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "boards")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "boards")
     @JsonIgnore
-    private Set<GUser> users;
+    private List<GUser> users;
 
 }

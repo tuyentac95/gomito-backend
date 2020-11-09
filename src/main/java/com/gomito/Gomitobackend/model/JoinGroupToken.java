@@ -1,8 +1,7 @@
 package com.gomito.Gomitobackend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -19,10 +18,14 @@ public class JoinGroupToken {
 
     private String token;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @ToString.Exclude
     private GUser member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @ToString.Exclude
     private GBoard board;
 
     private Instant expiryDate;
