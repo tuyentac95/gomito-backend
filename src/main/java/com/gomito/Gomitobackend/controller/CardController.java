@@ -107,7 +107,7 @@ public class CardController {
         }
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("/update")
     public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto){
         GCard card = gCardService.findById(gCardDto.getCardId());
         card.setCardName(gCardDto.getCardName());
