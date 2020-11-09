@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -33,5 +35,12 @@ public class GUser {
     private Instant created;
 
     private boolean enabled;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_board",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "board_id"))
+    @JsonIgnore
+    private Set<GBoard> boards;
     
 }

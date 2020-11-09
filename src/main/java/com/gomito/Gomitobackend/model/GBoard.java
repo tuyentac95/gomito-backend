@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,8 +18,11 @@ public class GBoard {
     private Long boardId;
     private String boardName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private GUser user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    private GUser user;
+
+    @ManyToMany(mappedBy = "boards")
+    private Set<GUser> users;
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/boards")
@@ -34,13 +35,16 @@ public class BoardController {
     @Autowired
     private GCardService gCardService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/{id}")
     public ResponseEntity<List<GList>> findAllListByBoardId(@PathVariable Long id) {
         GBoard board = gBoardService.findById(id);
-        GUser user = board.getUser();
+        Set<GUser> users = board.getUsers();
         GUser currentUser = authService.getCurrentUser();
 
-        if (user.getUserId().equals(currentUser.getUserId())) {
+        if (userService.checkMemberOfBoard()) {
             List<GList> lists = gListService.findAllByBoardAndOrderByListIndex(id);
             return ResponseEntity.status(HttpStatus.OK).body(lists);
         } else {
