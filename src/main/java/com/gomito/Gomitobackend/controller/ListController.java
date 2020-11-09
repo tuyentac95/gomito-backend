@@ -90,4 +90,14 @@ public class ListController {
         GUser authUser = authService.getCurrentUser();
         return (checkUser.getUserId().equals(authUser.getUserId()));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<GList> saveList(@RequestBody GList gList){
+        GList list = gListService.findById(gList.getListId());
+        list.setListName(gList.getListName());
+        gListService.save(list);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+
 }
