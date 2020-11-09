@@ -4,6 +4,7 @@ import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.dto.*;
 import com.gomito.Gomitobackend.model.GUser;
 
+import com.gomito.Gomitobackend.model.NotificationEmail;
 import com.gomito.Gomitobackend.model.VerificationToken;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.VerificationTokenRepository;
@@ -48,7 +49,7 @@ public class AuthService {
         String token = generateVerificationToken(gUser);
 //        mailService.setMail(new NotificationEmail("Please Activate your Account",
 //                gUser.getEmail(),"Thank you for signing up to Spring Reddit, " +
-//                "please click on the below url to activate your account : " +
+//                "please click on the below url to activate your account:\n" +
 //                "http://localhost:8080/auth/accountVerification/" + token));
     }
 
