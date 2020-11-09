@@ -10,12 +10,8 @@ import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.util.Set;
 
-@Getter
-@Setter
-@ToString
-//@RequiredArgsConstructor
+@Data
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
 @Entity
 @Table(name = "users")

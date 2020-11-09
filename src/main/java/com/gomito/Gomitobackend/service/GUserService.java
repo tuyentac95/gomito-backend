@@ -28,6 +28,7 @@ public class GUserService {
     }
 
     public GUser findUserByName(String username) {
+        System.out.println("check repo");
         return gUserRepository.findByUsername(username).orElse(null);
     }
 
