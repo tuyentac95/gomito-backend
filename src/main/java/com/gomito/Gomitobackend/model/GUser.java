@@ -1,9 +1,7 @@
 package com.gomito.Gomitobackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,8 +10,12 @@ import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+//@RequiredArgsConstructor
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Entity
 @Table(name = "users")

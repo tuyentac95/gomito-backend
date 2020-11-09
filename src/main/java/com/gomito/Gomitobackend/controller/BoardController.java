@@ -67,4 +67,23 @@ public class BoardController {
         gBoardService.save(gBoard);
         return new ResponseEntity<>(currentBoard, HttpStatus.OK);
     }
+
+    @PostMapping("/{boardId}/add-member")
+    public ResponseEntity<String> addMember(@PathVariable Long boardId, @RequestBody GUser member) {
+        System.out.println("check input boardId: " + boardId);
+        System.out.println("check input user:" + member);
+        GUser newMember;
+        if (member.getUsername() != null) {
+            newMember = gUserService.findUserByName(member.getUsername());
+        } else if (member.getEmail() != null) {
+            newMember = gUserService.findUserByEmail(member.getEmail());
+        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username and Email must not be null");
+        if (newMember != null) {
+            System.out.println("check member: " + newMember);
+            if (gBoardService.addMember(member, boardId)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Waiting for your member confirmation");
+            } else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something wrong");
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find your member");
+
+    }
 }
