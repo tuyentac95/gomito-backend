@@ -18,6 +18,11 @@ public class GLabel {
     private Long labelId;
     private String labelName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private GList list;
+    private Integer labelIndex;
+
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "labels")
     @JsonIgnore
     private Set<GCard> cards;
