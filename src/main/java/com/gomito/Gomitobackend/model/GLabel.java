@@ -20,7 +20,7 @@ public class GLabel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private GList list;
+    private GBoard board;
     private Integer labelIndex;
 
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "labels")

@@ -1,8 +1,10 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GLabel;
 import com.gomito.Gomitobackend.model.GLabelDto;
 import com.gomito.Gomitobackend.model.GList;
+import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GLabelService;
 import com.gomito.Gomitobackend.service.GListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,15 @@ public class LabelController {
     GLabelService gLabelService;
 
     @Autowired
-    GListService gListService;
+    GBoardService gBoardService;
 
     @PostMapping("/")
     public ResponseEntity<GLabel> createLabel(@RequestBody GLabelDto gLabelDto){
         GLabel gLabel = new GLabel();
         gLabel.setLabelName(gLabelDto.getLabelName());
 
-        GList gList = gListService.findById(gLabelDto.getListId());
-        gLabel.setList(gList);
+        GBoard gBoard = gBoardService.findById(gLabelDto.getBoardId());
+        gLabel.setBoard(gBoard);
 
         GLabel label = gLabelService.save(gLabel);
         return ResponseEntity.status(HttpStatus.CREATED).body(label);

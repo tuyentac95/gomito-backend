@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class GLabelDto {
     private Long labelId;
     private String labelName;
-    private Long listId;
+    private Long boardId;
     private Integer labelIndex;
 }
