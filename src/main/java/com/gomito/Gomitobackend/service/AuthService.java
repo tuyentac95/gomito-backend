@@ -153,7 +153,7 @@ public class AuthService {
             user.setPassword(encodePassword(request.getNewPassword()));
             gUserRepository.save(user);
             return true;
-        }
+        }       
         return false;
     }
 }
