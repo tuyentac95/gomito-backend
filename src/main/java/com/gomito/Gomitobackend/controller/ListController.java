@@ -1,10 +1,7 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.model.*;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GBoardService;
-import com.gomito.Gomitobackend.service.GCardService;
-import com.gomito.Gomitobackend.service.GListService;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,9 @@ public class ListController {
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    GUserService gUserService;
 
     @GetMapping("/{id}")
     public ResponseEntity<List<GCard>> findAllCardByListId(@PathVariable Long id) {
@@ -53,8 +53,9 @@ public class ListController {
         Long boardId = getBoardId(updateLists);
         System.out.println("Check boardId " + boardId);
         if (boardId > 0) {
-            System.out.println("check user id: " + checkUserId(boardId));
-            if (checkUserId(boardId)) {
+//            System.out.println("check user id: " + checkUserId(boardId));
+            GUser currentUser = authService.getCurrentUser();
+            if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
                 for (GListDto list : updateLists) {
                     System.out.println("check list " + list);
                     GList gList = gListService.findById(list.getListId());
@@ -84,12 +85,12 @@ public class ListController {
         return boardId;
     }
 
-    private boolean checkUserId(Long boardId) {
-        GBoard gBoard = gBoardService.findById(boardId);
-        GUser checkUser = gBoard.getUser();
-        GUser authUser = authService.getCurrentUser();
-        return (checkUser.getUserId().equals(authUser.getUserId()));
-    }
+//    private boolean checkUserId(Long boardId) {
+//        GBoard gBoard = gBoardService.findById(boardId);
+//        GUser checkUser = gBoard.getUser();
+//        GUser authUser = authService.getCurrentUser();
+//        return (checkUser.getUserId().equals(authUser.getUserId()));
+//    }
 
     @PutMapping("/update")
     public ResponseEntity<GList> saveList(@RequestBody GList gList){

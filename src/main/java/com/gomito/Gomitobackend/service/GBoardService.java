@@ -8,7 +8,10 @@ import com.gomito.Gomitobackend.repository.GUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class GBoardService {
@@ -24,13 +27,19 @@ public class GBoardService {
 
     public List<GBoard> findAllBoardByUserId(Long id){
         GUser user = gUserRepository.findById(id).orElse(null);
-        return gBoardRepository.findAllByUser(user);
+        Collection<GUser> users = new HashSet<>();
+        users.add(user);
+        return gBoardRepository.findAllByUsersIn(users);
     }
 
     public GBoard save(GBoard gBoard){
         GUser currentUser = authService.getCurrentUser();
-        gBoard.setUser(currentUser);
-        return gBoardRepository.save(gBoard);
+        GBoard board = gBoardRepository.save(gBoard);
+        Set<GBoard> boards = currentUser.getBoards();
+        boards.add(board);
+        currentUser.setBoards(boards);
+        gUserRepository.save(currentUser);
+        return board;
     }
 
     public GBoard findById(Long boardId) {

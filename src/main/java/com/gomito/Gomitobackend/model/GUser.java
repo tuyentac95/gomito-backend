@@ -38,8 +38,8 @@ public class GUser {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_board",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "board_id"))
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "boardId"))
     @JsonIgnore
     private Set<GBoard> boards;
     

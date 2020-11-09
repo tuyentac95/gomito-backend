@@ -23,6 +23,7 @@ public class GBoard {
 //    private GUser user;
 
     @ManyToMany(mappedBy = "boards")
+    @JsonIgnore
     private Set<GUser> users;
 
 }

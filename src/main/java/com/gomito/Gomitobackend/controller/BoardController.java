@@ -4,10 +4,7 @@ import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GCard;
 import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.model.GUser;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GBoardService;
-import com.gomito.Gomitobackend.service.GCardService;
-import com.gomito.Gomitobackend.service.GListService;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,15 +33,13 @@ public class BoardController {
     private GCardService gCardService;
 
     @Autowired
-    private UserService userService;
+    private GUserService gUserService;
 
     @GetMapping("/{id}")
     public ResponseEntity<List<GList>> findAllListByBoardId(@PathVariable Long id) {
-        GBoard board = gBoardService.findById(id);
-        Set<GUser> users = board.getUsers();
         GUser currentUser = authService.getCurrentUser();
 
-        if (userService.checkMemberOfBoard()) {
+        if (gUserService.checkMemberOfBoard(currentUser, id)) {
             List<GList> lists = gListService.findAllByBoardAndOrderByListIndex(id);
             return ResponseEntity.status(HttpStatus.OK).body(lists);
         } else {
@@ -72,5 +67,4 @@ public class BoardController {
         gBoardService.save(gBoard);
         return new ResponseEntity<>(currentBoard, HttpStatus.OK);
     }
-
 }
