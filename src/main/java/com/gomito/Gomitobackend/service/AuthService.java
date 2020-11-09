@@ -4,6 +4,7 @@ import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.dto.*;
 import com.gomito.Gomitobackend.model.GUser;
 
+import com.gomito.Gomitobackend.model.NotificationEmail;
 import com.gomito.Gomitobackend.model.VerificationToken;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.VerificationTokenRepository;
@@ -152,7 +153,7 @@ public class AuthService {
             user.setPassword(encodePassword(request.getNewPassword()));
             gUserRepository.save(user);
             return true;
-        }
+        }       
         return false;
     }
 }
