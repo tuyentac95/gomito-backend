@@ -1,13 +1,7 @@
 package com.gomito.Gomitobackend.controller;
 
-import com.gomito.Gomitobackend.model.GBoard;
-import com.gomito.Gomitobackend.model.GCard;
-import com.gomito.Gomitobackend.model.GList;
-import com.gomito.Gomitobackend.model.GUser;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GBoardService;
-import com.gomito.Gomitobackend.service.GCardService;
-import com.gomito.Gomitobackend.service.GListService;
+import com.gomito.Gomitobackend.model.*;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +28,9 @@ public class BoardController {
     @Autowired
     private GCardService gCardService;
 
+    @Autowired
+    private GLabelService gLabelService;
+
     @GetMapping("/{id}")
     public ResponseEntity<List<GList>> findAllListByBoardId(@PathVariable Long id) {
         GBoard board = gBoardService.findById(id);
@@ -43,6 +40,20 @@ public class BoardController {
         if (user.getUserId().equals(currentUser.getUserId())) {
             List<GList> lists = gListService.findAllByBoardAndOrderByListIndex(id);
             return ResponseEntity.status(HttpStatus.OK).body(lists);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    @GetMapping("/getAllLabel/{id}")
+    public ResponseEntity<List<GLabel>> findAllLabelByBoardId(@PathVariable Long id) {
+        GBoard board = gBoardService.findById(id);
+        GUser user = board.getUser();
+        GUser currentUser = authService.getCurrentUser();
+
+        if (user.getUserId().equals(currentUser.getUserId())) {
+            List<GLabel> labels = gLabelService.findAllLabelByBoardId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(labels);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }

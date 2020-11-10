@@ -1,9 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
-import com.gomito.Gomitobackend.model.GBoard;
-import com.gomito.Gomitobackend.model.GLabel;
-import com.gomito.Gomitobackend.model.GLabelDto;
-import com.gomito.Gomitobackend.model.GList;
+import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GLabelService;
 import com.gomito.Gomitobackend.service.GListService;
@@ -11,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/labels")
@@ -21,6 +20,12 @@ public class LabelController {
 
     @Autowired
     GBoardService gBoardService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<GLabel>> findAllLabelByBoardId(@PathVariable Long id) {
+        List<GLabel> labels = gLabelService.findAllLabelByBoardId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(labels);
+    }
 
     @PostMapping("/")
     public ResponseEntity<GLabel> createLabel(@RequestBody GLabelDto gLabelDto){
