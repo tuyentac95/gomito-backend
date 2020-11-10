@@ -6,14 +6,9 @@ import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.RequestEntity;
-=======
->>>>>>> 19fdfd12c29cc88e6f4200f60fc5ed99792b750b
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
