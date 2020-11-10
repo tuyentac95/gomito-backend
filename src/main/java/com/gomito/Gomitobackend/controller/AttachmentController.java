@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ResultSet;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/attachments")
 @CrossOrigin("*")
@@ -35,4 +38,6 @@ public class AttachmentController {
         Attachment newAttachment = attachmentService.saveAttachment(attachment);
         return ResponseEntity.status(HttpStatus.CREATED).body(newAttachment);
     }
+
+
 }

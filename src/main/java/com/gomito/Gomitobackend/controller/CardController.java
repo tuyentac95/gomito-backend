@@ -1,10 +1,7 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.model.*;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GBoardService;
-import com.gomito.Gomitobackend.service.GCardService;
-import com.gomito.Gomitobackend.service.GListService;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +21,9 @@ public class CardController {
 
     @Autowired
     private GCardService gCardService;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     @Autowired
     AuthService authService;
@@ -95,5 +95,11 @@ public class CardController {
             gCardService.save(gCard);
         }
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<Attachment>> getAttachmentByCardId(@PathVariable Long id){
+        List<Attachment> attachments = attachmentService.getAttachmentList(id);
+        return ResponseEntity.status(HttpStatus.OK).body(attachments);
     }
 }
