@@ -59,7 +59,7 @@ public class ListController {
                 for (GListDto list : updateLists) {
                     GList gList = gListService.findById(list.getListId());
                     gList.setListIndex(list.getListIndex());
-                    GList saveList = gListService.save(gList);
+                    gListService.save(gList);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
             } else {

@@ -66,6 +66,10 @@ public class BoardController {
 
     @PostMapping("/{boardId}/add-member")
     public ResponseEntity<String> addMember(@PathVariable Long boardId, @RequestBody GUserDto member) {
+        GUser currentUser = authService.getCurrentUser();
+        if (!gUserService.checkMemberOfBoard(currentUser, boardId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not allow to modify");
+        }
         GUser newMember;
         if (member.getUsername() != null) {
             newMember = gUserService.findUserByName(member.getUsername());
@@ -81,7 +85,7 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}/get-members")
-    public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long boardId){
+    public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long boardId) {
         GUser currentUser = authService.getCurrentUser();
         if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
             List<GUser> users = gUserService.findAllByBoardId(boardId);

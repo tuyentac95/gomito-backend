@@ -62,4 +62,8 @@ public class GUserService {
         GBoard board = gBoardService.findById(boardId);
         return board != null ? board.getUsers() : null;
     }
+
+    public GUser findById(Long userId) {
+        return gUserRepository.findById(userId).orElse(null);
+    }
 }

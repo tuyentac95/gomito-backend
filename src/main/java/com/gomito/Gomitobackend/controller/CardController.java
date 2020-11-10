@@ -1,6 +1,7 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.dto.GCardDto;
+import com.gomito.Gomitobackend.dto.GUserDto;
 import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +86,8 @@ public class CardController {
     }
 
     @PostMapping("updateIndexOfCardInAnotherList")
-    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto){
-        for (GCardDto cardDto: listGCarDto){
+    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto) {
+        for (GCardDto cardDto : listGCarDto) {
             GCard gCard = gCardService.findById(cardDto.getCardId());
             GList gList = gListService.findById(cardDto.getListId());
             gCard.setList(gList);
@@ -97,9 +98,9 @@ public class CardController {
     }
 
     @PostMapping("/addLabelToCard/{labelId}")
-    public ResponseEntity<String> addLabelToCard(@PathVariable Long labelId,@RequestBody GCardDto gCardDto){
+    public ResponseEntity<String> addLabelToCard(@PathVariable Long labelId, @RequestBody GCardDto gCardDto) {
         GCard gCard = gCardService.findById(gCardDto.getCardId());
-        Set<GLabel> listlabels =  gCard.getLabels();
+        Set<GLabel> listlabels = gCard.getLabels();
         GLabel label = gLabelService.findById(labelId);
         listlabels.add(label);
         gCardService.save(gCard);
@@ -117,15 +118,35 @@ public class CardController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto){
+    public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto) {
         GCard card = gCardService.findById(gCardDto.getCardId());
         card.setCardName(gCardDto.getCardName());
         card.setDescription(gCardDto.getDescription());
         GCard updateCard = gCardService.save(card);
         return new ResponseEntity<>(updateCard, HttpStatus.OK);
     }
+
     @GetMapping("/searches/{name}")
     public ResponseEntity<List<GCard>> searchByNamedParams(@PathVariable String name) {
         return new ResponseEntity<>(gCardService.searchByName(name), HttpStatus.OK);
+    }
+
+    @PostMapping("/{cardId}/add-member")
+    public ResponseEntity<String> addMember(@PathVariable Long cardId, @RequestBody GUserDto member) {
+        GBoard board = gBoardService.findByCardId(cardId);
+        GUser newMember = gUserService.findById(member.getUserId());
+        if (board != null && newMember != null) {
+            GUser currentUser = authService.getCurrentUser();
+            Long boardId = board.getBoardId();
+            if (gUserService.checkMemberOfBoard(currentUser, boardId)
+                    && gUserService.checkMemberOfBoard(newMember, boardId)) {
+                if (gCardService.addMember(newMember, cardId)) {
+                    return ResponseEntity.status(HttpStatus.OK).body("Add member to card successful");
+                }
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something's wrong");
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something's wrong");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something's wrong");
     }
 }
