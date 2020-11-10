@@ -52,7 +52,6 @@ public class ListController {
     public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists) {
         System.out.println(updateLists);
         Long boardId = getBoardId(updateLists);
-        System.out.println("Check boardId " + boardId);
         if (boardId > 0) {
             GUser currentUser = authService.getCurrentUser();
             if (gUserService.checkMemberOfBoard(currentUser, boardId)) {

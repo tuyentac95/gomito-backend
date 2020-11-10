@@ -71,13 +71,6 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
     }
 
-//    private boolean checkUserId(Long boardIdNew) {
-//        GBoard gBoard = gBoardService.findById(boardIdNew);
-//        GUser checkUser = gBoard.getUser();
-//        GUser authUser = authService.getCurrentUser();
-//        return checkUser.getUserId().equals(authUser.getUserId());
-//    }
-
     private Long getListId(List<GCardDto> updateCards) {
         GCard gCard = gCardService.findById(updateCards.get(0).getCardId());
         Long listId = gCard.getList().getListId();
@@ -111,5 +104,24 @@ public class CardController {
         listlabels.add(label);
         gCardService.save(gCard);
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GCard> getCard(@PathVariable Long id) {
+        GCard card = gCardService.findCardById(id);
+        if (card != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(card);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto){
+        GCard card = gCardService.findById(gCardDto.getCardId());
+        card.setCardName(gCardDto.getCardName());
+        card.setDescription(gCardDto.getDescription());
+        GCard updateCard = gCardService.save(card);
+        return new ResponseEntity<>(updateCard, HttpStatus.OK);
     }
 }
