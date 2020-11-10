@@ -87,22 +87,19 @@ public class BoardController {
     @GetMapping("/{boardId}/get-members")
     public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long boardId) {
         GUser currentUser = authService.getCurrentUser();
-        if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
-            List<GUser> users = gUserService.findAllByBoardId(boardId);
-            if (users != null) {
-                List<GUserDto> members = new ArrayList<>();
-                for (GUser user : users) {
-                    GUserDto gUserDto = new GUserDto();
-                    gUserDto.setUserId(user.getUserId());
-                    gUserDto.setUsername(user.getUsername());
-                    gUserDto.setEmail(user.getEmail());
-                    members.add(gUserDto);
-                }
-                return ResponseEntity.status(HttpStatus.OK).body(members);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+        if (!gUserService.checkMemberOfBoard(currentUser, boardId))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        List<GUser> users = gUserService.findAllByBoardId(boardId);
+        if (users == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        List<GUserDto> members = new ArrayList<>();
+        for (GUser user : users) {
+            GUserDto gUserDto = new GUserDto();
+            gUserDto.setUserId(user.getUserId());
+            gUserDto.setUsername(user.getUsername());
+            gUserDto.setEmail(user.getEmail());
+            members.add(gUserDto);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(members);
     }
 }

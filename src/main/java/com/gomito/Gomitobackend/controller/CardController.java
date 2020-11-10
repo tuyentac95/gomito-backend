@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -148,5 +149,24 @@ public class CardController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something's wrong");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something's wrong");
+    }
+
+    @GetMapping("/{cardId}/get-members")
+    public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long cardId) {
+        GCard card = gCardService.findById(cardId);
+        if (card == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        GUser currentUser = authService.getCurrentUser();
+        if (!gUserService.checkMemberOfBoard(currentUser, card.getList().getBoard().getBoardId()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        List<GUser> users = card.getUsers();
+        List<GUserDto> cardMembers = new ArrayList<>();
+        for (GUser user : users) {
+            GUserDto member = new GUserDto();
+            member.setUserId(user.getUserId());
+            member.setUsername(user.getUsername());
+            member.setEmail(user.getEmail());
+            cardMembers.add(member);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
     }
 }
