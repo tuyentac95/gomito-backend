@@ -1,20 +1,14 @@
 package com.gomito.Gomitobackend.controller;
 
-import com.gomito.Gomitobackend.model.GBoard;
-import com.gomito.Gomitobackend.model.GCard;
-import com.gomito.Gomitobackend.model.GList;
-import com.gomito.Gomitobackend.model.GUser;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GBoardService;
-import com.gomito.Gomitobackend.service.GCardService;
-import com.gomito.Gomitobackend.service.GListService;
+import com.gomito.Gomitobackend.dto.GUserDto;
+import com.gomito.Gomitobackend.model.*;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,13 +28,14 @@ public class BoardController {
     @Autowired
     private GCardService gCardService;
 
+    @Autowired
+    private GUserService gUserService;
+
     @GetMapping("/{id}")
     public ResponseEntity<List<GList>> findAllListByBoardId(@PathVariable Long id) {
-        GBoard board = gBoardService.findById(id);
-        GUser user = board.getUser();
         GUser currentUser = authService.getCurrentUser();
 
-        if (user.getUserId().equals(currentUser.getUserId())) {
+        if (gUserService.checkMemberOfBoard(currentUser, id)) {
             List<GList> lists = gListService.findAllByBoardAndOrderByListIndex(id);
             return ResponseEntity.status(HttpStatus.OK).body(lists);
         } else {
@@ -69,4 +64,41 @@ public class BoardController {
         return new ResponseEntity<>(currentBoard, HttpStatus.OK);
     }
 
+    @PostMapping("/{boardId}/add-member")
+    public ResponseEntity<String> addMember(@PathVariable Long boardId, @RequestBody GUserDto member) {
+        GUser newMember;
+        if (member.getUsername() != null) {
+            newMember = gUserService.findUserByName(member.getUsername());
+        } else if (member.getEmail() != null) {
+            newMember = gUserService.findUserByEmail(member.getEmail());
+        } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username and Email must not be null");
+
+        if (newMember != null) {
+            if (gBoardService.addMember(newMember, boardId)) {
+                return ResponseEntity.status(HttpStatus.OK).body("Waiting for your member confirmation");
+            } else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something wrong");
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find your member");
+    }
+
+    @GetMapping("/{boardId}/get-members")
+    public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long boardId){
+        GUser currentUser = authService.getCurrentUser();
+        if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
+            List<GUser> users = gUserService.findAllByBoardId(boardId);
+            if (users != null) {
+                List<GUserDto> members = new ArrayList<>();
+                for (GUser user : users) {
+                    GUserDto gUserDto = new GUserDto();
+                    gUserDto.setUserId(user.getUserId());
+                    gUserDto.setUsername(user.getUsername());
+                    gUserDto.setEmail(user.getEmail());
+                    members.add(gUserDto);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(members);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    }
 }

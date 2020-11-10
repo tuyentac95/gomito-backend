@@ -2,14 +2,11 @@ package com.gomito.Gomitobackend.service;
 
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.model.GCard;
-import com.gomito.Gomitobackend.model.GCardDto;
 import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -70,7 +67,4 @@ public class GCardService {
             return -1;
         }
     }
-
-
-
 }

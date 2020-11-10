@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.GCardDto;
 import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -20,13 +22,16 @@ public class CardController {
     private GListService gListService;
 
     @Autowired
+    private GLabelService gLabelService;
+
+    @Autowired
     private GCardService gCardService;
 
     @Autowired
-    private AttachmentService attachmentService;
+    AuthService authService;
 
     @Autowired
-    AuthService authService;
+    GUserService gUserService;
 
     @PostMapping("/")
     public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
@@ -50,11 +55,12 @@ public class CardController {
             GList gList = gListService.findById(listId);
             Long boardIdNew = gList.getBoard().getBoardId();
             if (boardIdNew > 0) {
-                if (checkUserId(boardIdNew)) {
+                GUser currentUser = authService.getCurrentUser();
+                if (gUserService.checkMemberOfBoard(currentUser, boardIdNew)) {
                     for (GCardDto card : updateCards) {
                         GCard gCard = gCardService.findById(card.getCardId());
                         gCard.setCardIndex(card.getCardIndex());
-                        GCard saveCard = gCardService.save(gCard);
+                        gCardService.save(gCard);
                     }
                     return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
                 } else {
@@ -65,12 +71,12 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You don't have authorization to modify!");
     }
 
-    private boolean checkUserId(Long boardIdNew) {
-        GBoard gBoard = gBoardService.findById(boardIdNew);
-        GUser checkUser = gBoard.getUser();
-        GUser authUser = authService.getCurrentUser();
-        return checkUser.getUserId().equals(authUser.getUserId());
-    }
+//    private boolean checkUserId(Long boardIdNew) {
+//        GBoard gBoard = gBoardService.findById(boardIdNew);
+//        GUser checkUser = gBoard.getUser();
+//        GUser authUser = authService.getCurrentUser();
+//        return checkUser.getUserId().equals(authUser.getUserId());
+//    }
 
     private Long getListId(List<GCardDto> updateCards) {
         GCard gCard = gCardService.findById(updateCards.get(0).getCardId());
@@ -97,9 +103,13 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Attachment>> getAttachmentByCardId(@PathVariable Long id){
-        List<Attachment> attachments = attachmentService.getAttachmentList(id);
-        return ResponseEntity.status(HttpStatus.OK).body(attachments);
+    @PostMapping("/addLabelToCard/{labelId}")
+    public ResponseEntity<String> addLabelToCard(@PathVariable Long labelId,@RequestBody GCardDto gCardDto){
+        GCard gCard = gCardService.findById(gCardDto.getCardId());
+        Set<GLabel> listlabels =  gCard.getLabels();
+        GLabel label = gLabelService.findById(labelId);
+        listlabels.add(label);
+        gCardService.save(gCard);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
     }
 }
