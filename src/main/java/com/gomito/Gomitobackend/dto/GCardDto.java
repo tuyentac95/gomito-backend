@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class GCardDto {
     private Long cardId;
     private String cardName;
+    private String description;
     private Long listId;
     private Integer cardIndex;
 }
