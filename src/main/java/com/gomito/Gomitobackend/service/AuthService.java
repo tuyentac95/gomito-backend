@@ -53,8 +53,6 @@ public class AuthService {
 //                "http://localhost:8080/auth/accountVerification/" + token));
     }
 
-
-
     private String generateVerificationToken(GUser gUser) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
