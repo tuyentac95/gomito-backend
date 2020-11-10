@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/attachments")
@@ -22,8 +20,6 @@ public class AttachmentController {
     @Autowired
     private AttachmentService attachmentService;
 
-    @Autowired
-    private GListService gListService;
 
     @Autowired
     private GCardService gCardService;
@@ -38,6 +34,21 @@ public class AttachmentController {
         Attachment newAttachment = attachmentService.saveAttachment(attachment);
         return ResponseEntity.status(HttpStatus.CREATED).body(newAttachment);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<Attachment> updateAttachment(@RequestBody Attachment attachment){
+        Attachment attach = attachmentService.findAttachmentById(attachment.getAttachmentId());
+        attach.setAttachmentName(attachment.getAttachmentName());
+        Attachment update = attachmentService.saveAttachment(attach);
+        return ResponseEntity.status(HttpStatus.OK).body(update);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Attachment> deleteAttachment(@PathVariable Long id){
+        attachmentService.deleteAttachment(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
 
 }

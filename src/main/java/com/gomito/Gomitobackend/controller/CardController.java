@@ -28,6 +28,9 @@ public class CardController {
     private GCardService gCardService;
 
     @Autowired
+    private AttachmentService attachmentService;
+
+    @Autowired
     AuthService authService;
 
     @Autowired
@@ -111,5 +114,11 @@ public class CardController {
         listlabels.add(label);
         gCardService.save(gCard);
         return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<Attachment>> getAttachmentList(@PathVariable Long id) {
+        List<Attachment> attachments = attachmentService.getAttachmentList(id);
+        return ResponseEntity.status(HttpStatus.OK).body(attachments);
     }
 }
