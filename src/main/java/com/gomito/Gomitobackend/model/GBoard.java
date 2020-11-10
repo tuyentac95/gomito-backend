@@ -1,11 +1,10 @@
 package com.gomito.Gomitobackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,8 +16,8 @@ public class GBoard {
     private Long boardId;
     private String boardName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "boards")
     @JsonIgnore
-    private GUser user;
+    private List<GUser> users;
 
 }
