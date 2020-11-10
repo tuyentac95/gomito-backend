@@ -1,4 +1,4 @@
-package com.gomito.Gomitobackend.model;
+package com.gomito.Gomitobackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

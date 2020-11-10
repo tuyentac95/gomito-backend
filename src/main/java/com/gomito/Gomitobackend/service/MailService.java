@@ -22,17 +22,17 @@ public class MailService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("langquang1995@gmail.com");
             messageHelper.setTo(notificationEmail.getRecipient());
-          messageHelper.setSubject(notificationEmail.getSubject());
-          messageHelper.setText(mailContentBuilder.build(
-                  notificationEmail.getBody()
-          ));
+            messageHelper.setSubject(notificationEmail.getSubject());
+            messageHelper.setText(mailContentBuilder.build(
+                    notificationEmail.getBody()
+            ));
         };
         try {
             mailSender.send(messagePreparator);
             log.info("Đã gửi email kích hoạt");
         } catch (MailException ex) {
             throw new SpringGomitoException("Đã xảy ra lỗi trong quá trình gửi thư"
-            + notificationEmail.getRecipient());
+                    + notificationEmail.getRecipient());
         }
     }
 }

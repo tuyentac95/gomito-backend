@@ -1,4 +1,4 @@
-package com.gomito.Gomitobackend.model;
+package com.gomito.Gomitobackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class GCardDto {
     private Long cardId;
     private String cardName;
+    private String description;
     private Long listId;
     private Integer cardIndex;
 }
