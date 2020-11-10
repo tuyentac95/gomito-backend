@@ -124,4 +124,8 @@ public class CardController {
         GCard updateCard = gCardService.save(card);
         return new ResponseEntity<>(updateCard, HttpStatus.OK);
     }
+    @GetMapping("/searches/{name}")
+    public ResponseEntity<List<GCard>> searchByNamedParams(@PathVariable String name) {
+        return new ResponseEntity<>(gCardService.searchByName(name), HttpStatus.OK);
+    }
 }
