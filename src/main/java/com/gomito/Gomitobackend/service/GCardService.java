@@ -7,10 +7,12 @@ import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -77,4 +79,9 @@ public class GCardService {
                 .orElse(null);
 
     }
+
+    public List<GCard> searchByName(String name) {
+        return gCardRepository.findCardByNamedParams(name);
+    }
+
 }
