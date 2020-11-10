@@ -3,6 +3,7 @@ package com.gomito.Gomitobackend.controller;
 import com.gomito.Gomitobackend.dto.ChangePasswordRequest;
 import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GUser;
+import com.gomito.Gomitobackend.model.GUserDto;
 import com.gomito.Gomitobackend.service.AuthService;
 import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GUserService;
@@ -48,9 +49,10 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<GUser> getUserInfo() {
+    public ResponseEntity<GUserDto> getUserInfo() {
         GUser user = authService.getCurrentUser();
-        GUser responseUser = new GUser();
+        GUserDto responseUser = new GUserDto();
+        responseUser.setUserId(user.getUserId());
         responseUser.setUsername(user.getUsername());
         responseUser.setEmail(user.getEmail());
         return ResponseEntity.status(HttpStatus.OK).body(responseUser);

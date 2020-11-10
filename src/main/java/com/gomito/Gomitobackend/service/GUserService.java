@@ -57,4 +57,9 @@ public class GUserService {
         } else return false;
 
     }
+
+    public List<GUser> findAllByBoardId(Long boardId) {
+        GBoard board = gBoardService.findById(boardId);
+        return board != null ? board.getUsers() : null;
+    }
 }

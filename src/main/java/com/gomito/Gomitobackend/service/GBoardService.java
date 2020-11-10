@@ -35,9 +35,6 @@ public class GBoardService {
     public List<GBoard> findAllBoardByUserId(Long id){
         GUser user = gUserRepository.findById(id).orElse(null);
         return user != null ? user.getBoards() : null;
-//        Collection<GUser> users = new HashSet<>();
-//        users.add(user);
-//        return gBoardRepository.findAllByUsersIn(users);
     }
 
     @Transactional
@@ -52,8 +49,7 @@ public class GBoardService {
     }
 
     public GBoard findById(Long boardId) {
-        return gBoardRepository.findById(boardId)
-                .orElseThrow(() -> new SpringGomitoException("KO tim thay Board: " + boardId));
+        return gBoardRepository.findById(boardId).orElse(null);
     }
 
     @Transactional

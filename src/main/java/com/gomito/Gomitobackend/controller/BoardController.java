@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -79,6 +80,27 @@ public class BoardController {
                 return ResponseEntity.status(HttpStatus.OK).body("Waiting for your member confirmation");
             } else return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something wrong");
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot find your member");
+    }
 
+    @GetMapping("/{boardId}/get-members")
+    public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long boardId){
+        GUser currentUser = authService.getCurrentUser();
+        if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
+            List<GUser> users = gUserService.findAllByBoardId(boardId);
+            if (users != null) {
+                List<GUserDto> members = new ArrayList<>();
+                for (GUser user : users) {
+                    GUserDto gUserDto = new GUserDto();
+                    gUserDto.setUserId(user.getUserId());
+                    gUserDto.setUsername(user.getUsername());
+                    gUserDto.setEmail(user.getEmail());
+                    members.add(gUserDto);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(members);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 }
