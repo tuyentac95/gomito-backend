@@ -3,12 +3,16 @@ package com.gomito.Gomitobackend.service;
 import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.model.GCard;
 import com.gomito.Gomitobackend.model.GList;
+import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GListRepository;
+import com.gomito.Gomitobackend.repository.GUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+
+import javax.smartcardio.Card;
 import java.util.List;
 
 @Service
@@ -19,6 +23,9 @@ public class GCardService {
 
     @Autowired
     private GListRepository gListRepository;
+
+    @Autowired
+    private GUserRepository gUserRepository;
 
     public List<GCard> findAllCardByListId(Long id) {
         GList list = gListRepository.findById(id)
@@ -80,4 +87,25 @@ public class GCardService {
         return gCardRepository.findCardByNamedParams(name);
     }
 
+    public boolean addMember(GUser newMember, Long cardId) {
+        GCard card = gCardRepository.findById(cardId).orElse(null);
+        if (card != null) {
+            if (checkMemberOfCard(newMember, card)) return false;
+            System.out.println("check add member to card");
+            List<GCard> cards = newMember.getCards();
+            cards.add(card);
+            newMember.setCards(cards);
+            gUserRepository.save(newMember);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkMemberOfCard(GUser newMember, GCard card) {
+        List<GUser> users = card.getUsers();
+        for (GUser user : users) {
+            if (user.getUserId().equals(newMember.getUserId())) return true;
+        }
+        return false;
+    }
 }
