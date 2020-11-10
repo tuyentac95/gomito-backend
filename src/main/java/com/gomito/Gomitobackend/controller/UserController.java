@@ -3,7 +3,7 @@ package com.gomito.Gomitobackend.controller;
 import com.gomito.Gomitobackend.dto.ChangePasswordRequest;
 import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GUser;
-import com.gomito.Gomitobackend.model.GUserDto;
+import com.gomito.Gomitobackend.dto.GUserDto;
 import com.gomito.Gomitobackend.service.AuthService;
 import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GUserService;

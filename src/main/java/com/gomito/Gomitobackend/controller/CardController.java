@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.GCardDto;
 import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
