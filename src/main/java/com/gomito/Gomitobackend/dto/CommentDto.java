@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GUserDto {
-    private Long userId;
-    private String username;
-    private String email;
-    private String avatarUrl;
+public class CommentDto {
+    private Long commentId;
+    private String content;
+    private Long cardId;
 }

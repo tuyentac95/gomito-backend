@@ -1,8 +1,11 @@
 package com.gomito.Gomitobackend.dto;
 
+import com.gomito.Gomitobackend.model.GLabel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -13,4 +16,5 @@ public class GCardDto {
     private String description;
     private Long listId;
     private Integer cardIndex;
+    private List<GLabel> labels;
 }

@@ -34,6 +34,8 @@ public class GUser {
 
     private boolean enabled;
 
+    private String avatarUrl;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_board",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
@@ -46,5 +48,4 @@ public class GUser {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
             inverseJoinColumns = @JoinColumn(name = "card_id", referencedColumnName = "cardId"))
     private List<GCard> cards;
-    
 }

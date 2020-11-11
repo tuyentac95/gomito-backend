@@ -6,23 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
-@Data
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GLabel {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long labelId;
-    private String labelName;
+    private Long commentId;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private GBoard board;
-
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "labels")
-    @JsonIgnore
-    private List<GCard> cards;
+    private GCard card;
 }

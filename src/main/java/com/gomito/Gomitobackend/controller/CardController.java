@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.CommentDto;
 import com.gomito.Gomitobackend.dto.GCardDto;
 import com.gomito.Gomitobackend.dto.GUserDto;
 import com.gomito.Gomitobackend.model.*;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -30,10 +30,16 @@ public class CardController {
     private GCardService gCardService;
 
     @Autowired
+    private AttachmentService attachmentService;
+
+    @Autowired
     AuthService authService;
 
     @Autowired
     GUserService gUserService;
+
+    @Autowired
+    CommentService commentService;
 
     @PostMapping("/")
     public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
@@ -87,8 +93,8 @@ public class CardController {
     }
 
     @PostMapping("updateIndexOfCardInAnotherList")
-    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto) {
-        for (GCardDto cardDto : listGCarDto) {
+    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto){
+        for (GCardDto cardDto: listGCarDto){
             GCard gCard = gCardService.findById(cardDto.getCardId());
             GList gList = gListService.findById(cardDto.getListId());
             gCard.setList(gList);
@@ -101,18 +107,35 @@ public class CardController {
     @PostMapping("/addLabelToCard/{labelId}")
     public ResponseEntity<String> addLabelToCard(@PathVariable Long labelId, @RequestBody GCardDto gCardDto) {
         GCard gCard = gCardService.findById(gCardDto.getCardId());
-        Set<GLabel> listlabels = gCard.getLabels();
+        List<GLabel> listLabels = gCard.getLabels();
         GLabel label = gLabelService.findById(labelId);
-        listlabels.add(label);
+        if (listLabels.contains(label)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error");
+        listLabels.add(label);
+        gCard.setLabels(listLabels);
+        System.out.println("check 3");
         gCardService.save(gCard);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+        System.out.println("Vừa thêm label có id là: " + labelId);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated done!");
+    }
+
+    @GetMapping("/attachment/{id}")
+    public ResponseEntity<List<Attachment>> getAttachmentList(@PathVariable Long id) {
+        List<Attachment> attachments = attachmentService.getAttachmentList(id);
+        return ResponseEntity.status(HttpStatus.OK).body(attachments);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GCard> getCard(@PathVariable Long id) {
+    public ResponseEntity<GCardDto> getCard(@PathVariable Long id) {
         GCard card = gCardService.findCardById(id);
         if (card != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(card);
+            GCardDto cardDto = new GCardDto();
+            cardDto.setCardId(card.getCardId());
+            cardDto.setCardName(card.getCardName());
+            cardDto.setDescription(card.getDescription());
+            cardDto.setListId(id);
+            cardDto.setCardIndex(card.getCardIndex());
+            cardDto.setLabels(card.getLabels());
+            return ResponseEntity.status(HttpStatus.OK).body(cardDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -159,5 +182,47 @@ public class CardController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something's wrong");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something's wrong");
+    }
+
+    @GetMapping("/{cardId}/get-members")
+    public ResponseEntity<List<GUserDto>> getMembers(@PathVariable Long cardId) {
+        GCard card = gCardService.findById(cardId);
+        if (card == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        GUser currentUser = authService.getCurrentUser();
+        if (!gUserService.checkMemberOfBoard(currentUser, card.getList().getBoard().getBoardId()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        List<GUser> users = card.getUsers();
+        List<GUserDto> cardMembers = new ArrayList<>();
+        for (GUser user : users) {
+            GUserDto member = new GUserDto();
+            member.setUserId(user.getUserId());
+            member.setUsername(user.getUsername());
+            member.setEmail(user.getEmail());
+            cardMembers.add(member);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
+    }
+
+    @GetMapping("/writeComment/{cardId}")
+    public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId) {
+        GCard card = gCardService.findById(cardId);
+        Long boardId = card.getList().getBoard().getBoardId();
+        if (boardId > 0) {
+            GUser currentUser = authService.getCurrentUser();
+            if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
+                List<Comment> comments = commentService.findAllByCardId(cardId);
+                List<CommentDto> commentDtos = new ArrayList<>();
+                for (Comment newComment : comments) {
+                    CommentDto commentDto = new CommentDto();
+                    commentDto.setCommentId(newComment.getCommentId());
+                    commentDto.setContent(newComment.getContent());
+                    commentDto.setCardId(cardId);
+                    commentDtos.add(commentDto);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
+            }
+
+        }
+        return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
     }
 }
