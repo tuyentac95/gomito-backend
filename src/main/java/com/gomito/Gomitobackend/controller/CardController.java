@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -85,8 +84,8 @@ public class CardController {
     }
 
     @PostMapping("updateIndexOfCardInAnotherList")
-    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto){
-        for (GCardDto cardDto: listGCarDto){
+    public ResponseEntity<String> changeIndexOfCard(@RequestBody List<GCardDto> listGCarDto) {
+        for (GCardDto cardDto : listGCarDto) {
             GCard gCard = gCardService.findById(cardDto.getCardId());
             GList gList = gListService.findById(cardDto.getListId());
             gCard.setList(gList);
@@ -97,27 +96,39 @@ public class CardController {
     }
 
     @PostMapping("/addLabelToCard/{labelId}")
-    public ResponseEntity<String> addLabelToCard(@PathVariable Long labelId,@RequestBody GCardDto gCardDto){
+    public ResponseEntity<String> addLabelToCard(@PathVariable Long labelId, @RequestBody GCardDto gCardDto) {
         GCard gCard = gCardService.findById(gCardDto.getCardId());
-        Set<GLabel> listlabels =  gCard.getLabels();
+        List<GLabel> listLabels = gCard.getLabels();
         GLabel label = gLabelService.findById(labelId);
-        listlabels.add(label);
+        if (listLabels.contains(label)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error");
+        listLabels.add(label);
+        gCard.setLabels(listLabels);
+        System.out.println("check 3");
         gCardService.save(gCard);
-        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
+        System.out.println("Vừa thêm label có id là: " + labelId);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated done!");
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<GCard> getCard(@PathVariable Long id) {
+    public ResponseEntity<GCardDto> getCard(@PathVariable Long id) {
         GCard card = gCardService.findCardById(id);
         if (card != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(card);
+            GCardDto cardDto = new GCardDto();
+            cardDto.setCardId(card.getCardId());
+            cardDto.setCardName(card.getCardName());
+            cardDto.setDescription(card.getDescription());
+            cardDto.setListId(id);
+            cardDto.setCardIndex(card.getCardIndex());
+            cardDto.setLabels(card.getLabels());
+            return ResponseEntity.status(HttpStatus.OK).body(cardDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto){
+    public ResponseEntity<GCard> saveCard(@RequestBody GCardDto gCardDto) {
         GCard card = gCardService.findById(gCardDto.getCardId());
         card.setCardName(gCardDto.getCardName());
         card.setDescription(gCardDto.getDescription());

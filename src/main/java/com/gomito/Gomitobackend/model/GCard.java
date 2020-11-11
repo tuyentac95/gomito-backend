@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -29,5 +28,5 @@ public class GCard {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "card_label")
     @JsonIgnore
-    private Set<GLabel> labels;
+    private List<GLabel> labels;
 }

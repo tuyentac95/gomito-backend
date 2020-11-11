@@ -1,9 +1,9 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.GLabelDto;
 import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.GBoardService;
 import com.gomito.Gomitobackend.service.GLabelService;
-import com.gomito.Gomitobackend.service.GListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

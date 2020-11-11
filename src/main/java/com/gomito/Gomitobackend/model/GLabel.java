@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,5 +24,5 @@ public class GLabel {
 
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "labels")
     @JsonIgnore
-    private Set<GCard> cards;
+    private List<GCard> cards;
 }

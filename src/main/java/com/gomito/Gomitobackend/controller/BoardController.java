@@ -3,8 +3,6 @@ package com.gomito.Gomitobackend.controller;
 import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.*;
 import com.gomito.Gomitobackend.dto.GUserDto;
-import com.gomito.Gomitobackend.model.*;
-import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +23,6 @@ public class BoardController {
 
     @Autowired
     private GListService gListService;
-
-    @Autowired
-    private GCardService gCardService;
 
     @Autowired
     private GUserService gUserService;

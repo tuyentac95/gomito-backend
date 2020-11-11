@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.GCardDto;
 import com.gomito.Gomitobackend.dto.GListDto;
 import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.service.*;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,9 +32,20 @@ public class ListController {
     GUserService gUserService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<GCard>> findAllCardByListId(@PathVariable Long id) {
+    public ResponseEntity<List<GCardDto>> findAllCardByListId(@PathVariable Long id) {
         List<GCard> cards = gCardService.findALlByListIdAndOrderByCardIndex(id);
-        return ResponseEntity.status(HttpStatus.OK).body(cards);
+        List<GCardDto> cardDtos = new ArrayList<>();
+        for (GCard card: cards) {
+            GCardDto cardDto = new GCardDto();
+            cardDto.setCardId(card.getCardId());
+            cardDto.setCardName(card.getCardName());
+            cardDto.setDescription(card.getDescription());
+            cardDto.setListId(id);
+            cardDto.setCardIndex(card.getCardIndex());
+            cardDto.setLabels(card.getLabels());
+            cardDtos.add(cardDto);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(cardDtos);
     }
 
     @PostMapping("/")
