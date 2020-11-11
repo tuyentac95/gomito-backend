@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -128,7 +129,17 @@ public class CardController {
 
     @GetMapping("/searches/{name}")
     public ResponseEntity<List<GCard>> searchByNamedParams(@PathVariable String name) {
-        return new ResponseEntity<>(gCardService.searchByName(name), HttpStatus.OK);
+        GUser currentUser = authService.getCurrentUser();
+        List<GCard> cards = gCardService.searchByName(name);
+        List<GCard> response = new ArrayList<>();
+        for (GCard card : cards) {
+            GBoard board = card.getList().getBoard();
+            if (gUserService.checkMemberOfBoard(currentUser, board.getBoardId())) {
+                response.add(card);
+            }
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @PostMapping("/{cardId}/add-member")
