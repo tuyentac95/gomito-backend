@@ -48,5 +48,4 @@ public class GUser {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
             inverseJoinColumns = @JoinColumn(name = "card_id", referencedColumnName = "cardId"))
     private List<GCard> cards;
-    
 }
