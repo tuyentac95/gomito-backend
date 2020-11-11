@@ -194,16 +194,25 @@ public class CardController {
     }
 
     @GetMapping("/writeComment/{cardId}")
-    public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId){
-        List<Comment> comments = (List<Comment>) commentService.findAllByCardId(cardId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        for (Comment newComment: comments){
-            CommentDto commentDto = new CommentDto();
-            commentDto.setCommentId(newComment.getCommentId());
-            commentDto.setContent(newComment.getContent());
-            commentDto.setCardId(cardId);
-            commentDtos.add(commentDto);
+    public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId) {
+        GCard card = gCardService.findById(cardId);
+        Long boardId = card.getList().getBoard().getBoardId();
+        if (boardId > 0) {
+            GUser currentUser = authService.getCurrentUser();
+            if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
+                List<Comment> comments = commentService.findAllByCardId(cardId);
+                List<CommentDto> commentDtos = new ArrayList<>();
+                for (Comment newComment : comments) {
+                    CommentDto commentDto = new CommentDto();
+                    commentDto.setCommentId(newComment.getCommentId());
+                    commentDto.setContent(newComment.getContent());
+                    commentDto.setCardId(cardId);
+                    commentDtos.add(commentDto);
+                }
+                return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
+            }
+
         }
-        return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
+        return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
     }
 }
