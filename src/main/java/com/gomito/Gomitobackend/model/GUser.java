@@ -40,5 +40,11 @@ public class GUser {
             inverseJoinColumns = @JoinColumn(name = "board_id", referencedColumnName = "boardId"))
     @JsonIgnore
     private List<GBoard> boards;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_card",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "card_id", referencedColumnName = "cardId"))
+    private List<GCard> cards;
     
 }

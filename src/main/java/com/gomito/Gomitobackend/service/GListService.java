@@ -8,6 +8,7 @@ import com.gomito.Gomitobackend.repository.GListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Session;
 import java.util.List;
 
 @Service
@@ -56,5 +57,4 @@ public class GListService {
             return -1;
         }
     }
-
 }

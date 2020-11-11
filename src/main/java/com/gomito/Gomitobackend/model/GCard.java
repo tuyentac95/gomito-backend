@@ -29,4 +29,8 @@ public class GCard {
     @JoinTable(name = "card_label")
     @JsonIgnore
     private List<GLabel> labels;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cards")
+    @JsonIgnore
+    private List<GUser> users;
 }

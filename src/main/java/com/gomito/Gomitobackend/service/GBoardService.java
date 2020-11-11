@@ -1,10 +1,9 @@
 package com.gomito.Gomitobackend.service;
 
-import com.gomito.Gomitobackend.model.GBoard;
-import com.gomito.Gomitobackend.model.GUser;
-import com.gomito.Gomitobackend.model.JoinGroupToken;
-import com.gomito.Gomitobackend.model.NotificationEmail;
+import com.gomito.Gomitobackend.Exception.SpringGomitoException;
+import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.repository.GBoardRepository;
+import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.JoinGroupTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,9 @@ public class GBoardService {
 
     @Autowired
     private JoinGroupTokenRepository joinGroupTokenRepository;
+
+    @Autowired
+    private GCardRepository gCardRepository;
 
     public List<GBoard> findAllBoardByUserId(Long id){
         GUser user = gUserRepository.findById(id).orElse(null);
@@ -72,5 +74,13 @@ public class GBoardService {
 
             return true;
         } else return false;
+    }
+
+    public GBoard findByCardId(Long cardId) {
+        GCard card = gCardRepository.findById(cardId).orElse(null);
+        if (card != null) {
+            return card.getList().getBoard();
+        }
+        return null;
     }
 }
