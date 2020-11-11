@@ -29,6 +29,9 @@ public class CardController {
     private GCardService gCardService;
 
     @Autowired
+    private AttachmentService attachmentService;
+
+    @Autowired
     AuthService authService;
 
     @Autowired
@@ -109,6 +112,12 @@ public class CardController {
         gCardService.save(gCard);
         System.out.println("Vừa thêm label có id là: " + labelId);
         return ResponseEntity.status(HttpStatus.OK).body("Updated done!");
+    }
+
+    @GetMapping("/attachment/{id}")
+    public ResponseEntity<List<Attachment>> getAttachmentList(@PathVariable Long id) {
+        List<Attachment> attachments = attachmentService.getAttachmentList(id);
+        return ResponseEntity.status(HttpStatus.OK).body(attachments);
     }
 
     @GetMapping("/{id}")

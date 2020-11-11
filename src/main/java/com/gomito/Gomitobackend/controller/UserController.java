@@ -55,6 +55,7 @@ public class UserController {
         responseUser.setUserId(user.getUserId());
         responseUser.setUsername(user.getUsername());
         responseUser.setEmail(user.getEmail());
+        responseUser.setAvatarUrl(user.getAvatarUrl());
         return ResponseEntity.status(HttpStatus.OK).body(responseUser);
     }
 
@@ -68,6 +69,15 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong token");
         }
+    }
+
+    @PutMapping("/updateAvatar")
+    public ResponseEntity<GUser> editUserAvatar(@RequestBody GUserDto user){
+        System.out.println(user.getAvatarUrl());
+        GUser currentUser = authService.getCurrentUser();
+        currentUser.setAvatarUrl(user.getAvatarUrl());
+        GUser updatedUser = gUserService.saveUser(currentUser);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
 }
