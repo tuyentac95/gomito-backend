@@ -131,6 +131,7 @@ public class CardController {
             cardDto.setListId(id);
             cardDto.setCardIndex(card.getCardIndex());
             cardDto.setLabels(card.getLabels());
+            cardDto.setMembers(card.getUsers());
             return ResponseEntity.status(HttpStatus.OK).body(cardDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
