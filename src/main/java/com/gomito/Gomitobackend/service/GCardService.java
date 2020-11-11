@@ -50,7 +50,7 @@ public class GCardService {
 
     public GCard findById(Long cardId){
         return gCardRepository.findById(cardId)
-                .orElseThrow(() -> new SpringGomitoException("Không tìm thấy list: " + cardId));
+                .orElseThrow(null);
     }
 
     public List<GCard> findALlByListIdAndOrderByCardIndex(Long id){
