@@ -62,4 +62,13 @@ public class GUserService {
         GBoard board = gBoardService.findById(boardId);
         return board != null ? board.getUsers() : null;
     }
+
+   public GUser saveUser(GUser user){
+        return gUserRepository.save(user);
+   }
+
+   public GUser findUserById(Long id){
+        return gUserRepository.findById(id)
+                .orElseThrow(() -> new SpringGomitoException("Khong tim thay user:" +id) );
+   }
 }
