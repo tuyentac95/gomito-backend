@@ -1,5 +1,6 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.CommentDto;
 import com.gomito.Gomitobackend.dto.GCardDto;
 import com.gomito.Gomitobackend.dto.GUserDto;
 import com.gomito.Gomitobackend.model.*;
@@ -36,6 +37,9 @@ public class CardController {
 
     @Autowired
     GUserService gUserService;
+
+    @Autowired
+    CommentService commentService;
 
     @PostMapping("/")
     public ResponseEntity<GCard> createCard(@RequestBody GCardDto cardDto) {
@@ -196,5 +200,19 @@ public class CardController {
             cardMembers.add(member);
         }
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
+    }
+
+    @GetMapping("/writeComment/{cardId}")
+    public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId){
+        List<Comment> comments = (List<Comment>) commentService.findAllByCardId(cardId);
+        List<CommentDto> commentDtos = new ArrayList<>();
+        for (Comment newComment: comments){
+            CommentDto commentDto = new CommentDto();
+            commentDto.setCommentId(newComment.getCommentId());
+            commentDto.setContent(newComment.getContent());
+            commentDto.setCardId(cardId);
+            commentDtos.add(commentDto);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
     }
 }
