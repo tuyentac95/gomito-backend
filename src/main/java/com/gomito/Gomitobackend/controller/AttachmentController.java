@@ -30,7 +30,7 @@ public class AttachmentController {
         attachment.setAttachmentName(attachmentDto.getAttachmentName());
         GCard card = gCardService.findById(attachmentDto.getCardId());
         attachment.setCard(card);
-        attachment.setUrl(attachmentDto.getUrl());
+        attachment.setUrl(attachmentDto.getAttachmentUrl());
         Attachment newAttachment = attachmentService.saveAttachment(attachment);
         return ResponseEntity.status(HttpStatus.CREATED).body(newAttachment);
     }

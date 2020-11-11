@@ -52,18 +52,13 @@ public class ListController {
     public ResponseEntity<String> updateListIndex(@RequestBody List<GListDto> updateLists) {
         System.out.println(updateLists);
         Long boardId = getBoardId(updateLists);
-        System.out.println("Check boardId " + boardId);
         if (boardId > 0) {
-//            System.out.println("check user id: " + checkUserId(boardId));
             GUser currentUser = authService.getCurrentUser();
             if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
                 for (GListDto list : updateLists) {
-                    System.out.println("check list " + list);
                     GList gList = gListService.findById(list.getListId());
                     gList.setListIndex(list.getListIndex());
-                    System.out.println("check glist: " + gList);
-                    GList saveList = gListService.save(gList);
-                    System.out.println("check save listL " + saveList);
+                    gListService.save(gList);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body("Updated successfully!");
             } else {
@@ -86,13 +81,6 @@ public class ListController {
         return boardId;
     }
 
-//    private boolean checkUserId(Long boardId) {
-//        GBoard gBoard = gBoardService.findById(boardId);
-//        GUser checkUser = gBoard.getUser();
-//        GUser authUser = authService.getCurrentUser();
-//        return (checkUser.getUserId().equals(authUser.getUserId()));
-//    }
-
     @PutMapping("/update")
     public ResponseEntity<GList> saveList(@RequestBody GList gList){
         GList list = gListService.findById(gList.getListId());
@@ -100,6 +88,4 @@ public class ListController {
         GList updateList = gListService.save(list);
         return new ResponseEntity<>(updateList, HttpStatus.OK);
     }
-
-
 }

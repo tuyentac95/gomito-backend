@@ -8,10 +8,8 @@ import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.JoinGroupTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class GUserService {
@@ -71,4 +69,8 @@ public class GUserService {
         return gUserRepository.findById(id)
                 .orElseThrow(() -> new SpringGomitoException("Khong tim thay user:" +id) );
    }
+
+    public GUser findById(Long userId) {
+        return gUserRepository.findById(userId).orElse(null);
+    }
 }

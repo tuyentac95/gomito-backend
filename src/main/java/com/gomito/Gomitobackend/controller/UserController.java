@@ -55,6 +55,7 @@ public class UserController {
         responseUser.setUserId(user.getUserId());
         responseUser.setUsername(user.getUsername());
         responseUser.setEmail(user.getEmail());
+        responseUser.setAvatarUrl(user.getAvatarUrl());
         return ResponseEntity.status(HttpStatus.OK).body(responseUser);
     }
 
@@ -70,11 +71,12 @@ public class UserController {
         }
     }
 
-    @PutMapping("updateAvatar")
-    public ResponseEntity<GUser> editUserAvatar(@RequestBody GUser user){
-        GUser gUser = gUserService.findUserById(user.getUserId());
-        gUser.setAvatarUrl(user.getAvatarUrl());
-        GUser updatedUser = gUserService.saveUser(gUser);
+    @PutMapping("/updateAvatar")
+    public ResponseEntity<GUser> editUserAvatar(@RequestBody GUserDto user){
+        System.out.println(user.getAvatarUrl());
+        GUser currentUser = authService.getCurrentUser();
+        currentUser.setAvatarUrl(user.getAvatarUrl());
+        GUser updatedUser = gUserService.saveUser(currentUser);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 

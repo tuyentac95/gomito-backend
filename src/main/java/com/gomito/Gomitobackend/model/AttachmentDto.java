@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class AttachmentDto {
     private Long attachmentId;
     private String attachmentName;
-    private String url;
+    private String attachmentUrl;
     private Long cardId;
 }
