@@ -8,11 +8,8 @@ import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.repository.GListRepository;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
-import javax.smartcardio.Card;
 import java.util.List;
 
 @Service
@@ -80,7 +77,6 @@ public class GCardService {
     public GCard findCardById(Long id) {
         return gCardRepository.findById(id)
                 .orElse(null);
-
     }
 
     public List<GCard> searchByName(String name) {
