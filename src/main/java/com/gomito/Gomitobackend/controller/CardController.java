@@ -171,7 +171,7 @@ public class CardController {
                 response.add(card);
             }
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{cardId}/add-member")
