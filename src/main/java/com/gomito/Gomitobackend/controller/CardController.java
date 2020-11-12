@@ -204,6 +204,7 @@ public class CardController {
             member.setUserId(user.getUserId());
             member.setUsername(user.getUsername());
             member.setEmail(user.getEmail());
+            member.setAvatarUrl(user.getAvatarUrl());
             cardMembers.add(member);
         }
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
