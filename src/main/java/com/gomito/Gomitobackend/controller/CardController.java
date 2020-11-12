@@ -193,6 +193,7 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
     }
 
+
     @GetMapping("/writeComment/{cardId}")
     public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId) {
         GCard card = gCardService.findById(cardId);
