@@ -1,6 +1,5 @@
 package com.gomito.Gomitobackend.service;
 
-import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.model.Comment;
 import com.gomito.Gomitobackend.model.GCard;
 import com.gomito.Gomitobackend.repository.CommentRepository;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -24,4 +24,11 @@ public class CommentService {
 
     public Comment save(Comment comment) {return commentRepository.save(comment);}
 
+    public void delete(Comment comment) {
+        commentRepository.delete(comment);
+    }
+
+    public Comment findById(Long commentId){
+        return commentRepository.findById(commentId).orElse(null);
+    }
 }

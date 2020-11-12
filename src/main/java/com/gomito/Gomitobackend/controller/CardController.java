@@ -211,7 +211,6 @@ public class CardController {
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
             }
-
         }
         return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
     }
