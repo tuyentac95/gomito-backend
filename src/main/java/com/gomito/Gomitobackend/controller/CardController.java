@@ -152,14 +152,20 @@ public class CardController {
     }
 
     @GetMapping("/searches/{name}")
-    public ResponseEntity<List<GCard>> searchByNamedParams(@PathVariable String name) {
+    public ResponseEntity<List<GCardDto>> searchByNamedParams(@PathVariable String name) {
         GUser currentUser = authService.getCurrentUser();
         List<GCard> cards = gCardService.searchByName(name);
-        List<GCard> response = new ArrayList<>();
+        List<GCardDto> response = new ArrayList<>();
         for (GCard card : cards) {
             GBoard board = card.getList().getBoard();
             if (gUserService.checkMemberOfBoard(currentUser, board.getBoardId())) {
-                response.add(card);
+                GCardDto cardDto = new GCardDto();
+                cardDto.setCardId(card.getCardId());
+                cardDto.setCardName(card.getCardName());
+                cardDto.setDescription(card.getDescription());
+                cardDto.setListId(card.getList().getListId());
+                cardDto.setBoardId(card.getList().getBoard().getBoardId());
+                response.add(cardDto);
             }
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -198,6 +204,7 @@ public class CardController {
             member.setUserId(user.getUserId());
             member.setUsername(user.getUsername());
             member.setEmail(user.getEmail());
+            member.setAvatarUrl(user.getAvatarUrl());
             cardMembers.add(member);
         }
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
