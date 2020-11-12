@@ -1,6 +1,7 @@
 package com.gomito.Gomitobackend.dto;
 
 import com.gomito.Gomitobackend.model.GLabel;
+import com.gomito.Gomitobackend.model.GUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,5 @@ public class GCardDto {
     private Long listId;
     private Integer cardIndex;
     private List<GLabel> labels;
+    private List<GUser> members;
 }
