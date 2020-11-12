@@ -19,4 +19,5 @@ public class GCardDto {
     private Integer cardIndex;
     private List<GLabel> labels;
     private List<GUser> members;
+    private Long boardId;
 }
