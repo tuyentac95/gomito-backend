@@ -161,7 +161,16 @@ public class CardController {
 
     @GetMapping("/searches/{name}")
     public ResponseEntity<List<GCard>> searchByNamedParams(@PathVariable String name) {
-        return new ResponseEntity<>(gCardService.searchByName(name), HttpStatus.OK);
+        GUser currentUser = authService.getCurrentUser();
+        List<GCard> cards = gCardService.searchByName(name);
+        List<GCard> response = new ArrayList<>();
+        for (GCard card : cards) {
+            GBoard board = card.getList().getBoard();
+            if (gUserService.checkMemberOfBoard(currentUser, board.getBoardId())) {
+                response.add(card);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{cardId}/add-member")
@@ -220,7 +229,6 @@ public class CardController {
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
             }
-
         }
         return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
     }
