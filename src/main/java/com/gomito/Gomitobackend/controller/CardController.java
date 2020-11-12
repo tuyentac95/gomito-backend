@@ -135,6 +135,7 @@ public class CardController {
             cardDto.setListId(id);
             cardDto.setCardIndex(card.getCardIndex());
             cardDto.setLabels(card.getLabels());
+            cardDto.setMembers(card.getUsers());
             return ResponseEntity.status(HttpStatus.OK).body(cardDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -161,7 +162,7 @@ public class CardController {
                 response.add(card);
             }
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{cardId}/add-member")
@@ -201,7 +202,6 @@ public class CardController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
     }
-
 
     @GetMapping("/writeComment/{cardId}")
     public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId) {
