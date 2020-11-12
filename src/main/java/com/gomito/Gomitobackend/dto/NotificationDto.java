@@ -11,4 +11,5 @@ public class NotificationDto {
     private Long notificationId;
     private String senderName;
     private String message;
+    private String receiverName;
 }
