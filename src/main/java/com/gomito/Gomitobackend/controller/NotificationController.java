@@ -35,7 +35,7 @@ public class NotificationController {
     @Autowired
     private AuthService authService;
 
-    @MessageMapping("/notify/{cardId}")
+    @MessageMapping("/notifyAll/{cardId}")
     public void sendNotificationToAll(@DestinationVariable Long cardId, NotificationDto dto) {
         GCard card = cardService.findById(cardId);
         if (card != null) {
@@ -50,6 +50,21 @@ public class NotificationController {
                         simpMessagingTemplate.convertAndSend("/topic/notify/" + anotherMember.getUsername(), dto);
                     }
                 }
+            }
+        }
+    }
+
+    @MessageMapping("/notifyOne/{cardId}")
+    public void sendNotificationToOne(@DestinationVariable Long cardId, NotificationDto dto) {
+        GCard card = cardService.findById(cardId);
+        if (card != null) {
+            System.out.println("check card " + card.getCardName());
+            GBoard board = card.getList().getBoard();
+            GUser sender = userService.findUserByName(dto.getSenderName());
+            GUser receiver = userService.findUserByName(dto.getReceiverName());
+            if (userService.checkMemberOfBoard(sender, board.getBoardId()) && userService.checkMemberOfBoard(receiver, board.getBoardId())) {
+                System.out.println("Send notification to " + receiver.getUsername());
+                simpMessagingTemplate.convertAndSend("/topic/notify/" + receiver.getUsername(), dto);
             }
         }
     }
