@@ -14,9 +14,9 @@ public class NotificationController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/notify/{group}")
-    public void sendNotification(@DestinationVariable String group, Notification notification){
-        System.out.println("Handling notification" + notification + " to group: " + group);
-        simpMessagingTemplate.convertAndSend("topic/notify/" + group, notification);
+    @MessageMapping("/notify/{cardId}")
+    public void sendNotification(@DestinationVariable Long cardId, Notification notification){
+        System.out.println("Handling notification" + notification + " to group: " + cardId);
+        simpMessagingTemplate.convertAndSend("/topic/notify/" + cardId, notification);
     }
 }
