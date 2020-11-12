@@ -202,6 +202,7 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
     }
 
+
     @GetMapping("/writeComment/{cardId}")
     public ResponseEntity<List<CommentDto>> writeComment(@PathVariable Long cardId) {
         GCard card = gCardService.findById(cardId);
@@ -216,11 +217,12 @@ public class CardController {
                     commentDto.setCommentId(newComment.getCommentId());
                     commentDto.setContent(newComment.getContent());
                     commentDto.setCardId(cardId);
+                    commentDto.setGUser(newComment.getUser());
                     commentDtos.add(commentDto);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
             }
         }
-        return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 }
