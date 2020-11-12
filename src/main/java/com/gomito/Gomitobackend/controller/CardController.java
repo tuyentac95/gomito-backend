@@ -144,6 +144,7 @@ public class CardController {
             cardDto.setListId(id);
             cardDto.setCardIndex(card.getCardIndex());
             cardDto.setLabels(card.getLabels());
+            cardDto.setMembers(card.getUsers());
             return ResponseEntity.status(HttpStatus.OK).body(cardDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -225,11 +226,12 @@ public class CardController {
                     commentDto.setCommentId(newComment.getCommentId());
                     commentDto.setContent(newComment.getContent());
                     commentDto.setCardId(cardId);
+                    commentDto.setGUser(newComment.getUser());
                     commentDtos.add(commentDto);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
             }
         }
-        return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 }
