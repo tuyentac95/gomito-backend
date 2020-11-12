@@ -162,7 +162,7 @@ public class CardController {
                 response.add(card);
             }
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{cardId}/add-member")
@@ -198,6 +198,7 @@ public class CardController {
             member.setUserId(user.getUserId());
             member.setUsername(user.getUsername());
             member.setEmail(user.getEmail());
+            member.setAvatarUrl(user.getAvatarUrl());
             cardMembers.add(member);
         }
         return ResponseEntity.status(HttpStatus.OK).body(cardMembers);
@@ -222,6 +223,6 @@ public class CardController {
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
             }
         }
-        return (ResponseEntity<List<CommentDto>>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 }
