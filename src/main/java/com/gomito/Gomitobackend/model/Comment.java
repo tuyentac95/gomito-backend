@@ -20,4 +20,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private GCard card;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private GUser user;
 }

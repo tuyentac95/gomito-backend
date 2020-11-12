@@ -33,5 +33,6 @@ public class GCard {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cards")
     @JsonIgnore
     private List<GUser> users;
+    private Long userId;
 
 }
