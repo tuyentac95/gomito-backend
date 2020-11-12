@@ -108,6 +108,7 @@ public class BoardController {
             gUserDto.setUserId(user.getUserId());
             gUserDto.setUsername(user.getUsername());
             gUserDto.setEmail(user.getEmail());
+            gUserDto.setAvatarUrl(user.getAvatarUrl());
             members.add(gUserDto);
         }
         return ResponseEntity.status(HttpStatus.OK).body(members);
