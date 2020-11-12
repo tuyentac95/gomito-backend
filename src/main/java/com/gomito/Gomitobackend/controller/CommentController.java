@@ -1,11 +1,8 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.dto.CommentDto;
-import com.gomito.Gomitobackend.dto.GListDto;
 import com.gomito.Gomitobackend.model.Comment;
 import com.gomito.Gomitobackend.model.GCard;
-
-import com.gomito.Gomitobackend.model.GList;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.service.AuthService;
 import com.gomito.Gomitobackend.service.CommentService;
@@ -38,17 +35,26 @@ public class CommentController {
         Long boardId = card.getList().getBoard().getBoardId();
         if (boardId > 0) {
             GUser currentUser = authService.getCurrentUser();
-            if (gUserService.checkMemberOfBoard(currentUser, boardId)) {
+            if (gUserService.checkMemberOfBoard(currentUser, boardId)){
                 Comment comment = new Comment();
                 comment.setContent(commentDto.getContent());
 
                 GCard gCard = cardService.findById(commentDto.getCardId());
                 comment.setCard(gCard);
 
+                comment.setUser(currentUser);
+
                 Comment commentToSave = commentService.save(comment);
                 return ResponseEntity.status(HttpStatus.CREATED).body(commentToSave);
             }
         }
         return (ResponseEntity<Comment>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId){
+        Comment comment = commentService.findById(commentId);
+        commentService.delete(comment);
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully!");
     }
 }
