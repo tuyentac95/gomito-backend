@@ -1,6 +1,15 @@
 package com.gomito.Gomitobackend.controller;
 
+import com.gomito.Gomitobackend.dto.NotificationDto;
+import com.gomito.Gomitobackend.model.GBoard;
+import com.gomito.Gomitobackend.model.GCard;
+import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.model.Notification;
+import com.gomito.Gomitobackend.repository.GBoardRepository;
+import com.gomito.Gomitobackend.repository.GCardRepository;
+import com.gomito.Gomitobackend.service.AuthService;
+import com.gomito.Gomitobackend.service.GCardService;
+import com.gomito.Gomitobackend.service.GUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,15 +17,40 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
 public class NotificationController {
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @Autowired
+    private GCardService cardService;
+
+    @Autowired
+    private GUserService userService;
+
+    @Autowired
+    private AuthService authService;
+
     @MessageMapping("/notify/{cardId}")
-    public void sendNotification(@DestinationVariable Long cardId, Notification notification){
-        System.out.println("Handling notification" + notification + " to group: " + cardId);
-        simpMessagingTemplate.convertAndSend("/topic/notify/" + cardId, notification);
+    public void sendNotificationToAll(@DestinationVariable Long cardId, NotificationDto dto) {
+        GCard card = cardService.findById(cardId);
+        if (card != null) {
+            System.out.println("check card " + card.getCardName());
+            GBoard board = card.getList().getBoard();
+            GUser currentUser = userService.findUserByName(dto.getSenderName());
+            if (userService.checkMemberOfBoard(currentUser, board.getBoardId())) {
+                List<GUser> members = board.getUsers();
+                for (GUser anotherMember : members) {
+                    if (!anotherMember.getUsername().equals(dto.getSenderName())) {
+                        System.out.println("Send notification to " + anotherMember.getUsername());
+                        simpMessagingTemplate.convertAndSend("/topic/notify/" + anotherMember.getUsername(), dto);
+                    }
+                }
+            }
+        }
     }
 }
