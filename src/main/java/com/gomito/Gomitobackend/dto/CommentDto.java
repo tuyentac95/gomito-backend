@@ -12,5 +12,7 @@ public class CommentDto {
     private Long commentId;
     private String content;
     private Long cardId;
+    private GUser gUser;
+
 //    private GUser user;
 }

@@ -42,9 +42,8 @@ public class CommentController {
                 GCard gCard = cardService.findById(commentDto.getCardId());
                 comment.setCard(gCard);
 
-//                GUser user = comment.getUser();
                 comment.setUser(currentUser);
-                System.out.println(currentUser.getUserId());
+
                 Comment commentToSave = commentService.save(comment);
                 return ResponseEntity.status(HttpStatus.CREATED).body(commentToSave);
             }

@@ -208,6 +208,7 @@ public class CardController {
                     commentDto.setCommentId(newComment.getCommentId());
                     commentDto.setContent(newComment.getContent());
                     commentDto.setCardId(cardId);
+                    commentDto.setGUser(newComment.getUser());
                     commentDtos.add(commentDto);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
