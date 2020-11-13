@@ -6,17 +6,18 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin("*")
-public class NotificationConroller {
+public class NotificationController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/notify/{users}")
-    public void sendNotification(@DestinationVariable String users, Message message) {
-        System.out.println("Handling notification " + message + " to users: " + users);
-        simpMessagingTemplate.convertAndSend("/topic/notify/" + users, message);
+    @MessageMapping("/notify/{user}" )
+    public void sendNotification(@DestinationVariable String user, Message message) {
+        System.out.println("Handling notification " + message + " to user: " + user);
+        simpMessagingTemplate.convertAndSend("/notification/notify" + user, message);
     }
 }
