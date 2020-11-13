@@ -1,15 +1,10 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.dto.NotificationDto;
-import com.gomito.Gomitobackend.model.GBoard;
-import com.gomito.Gomitobackend.model.GCard;
-import com.gomito.Gomitobackend.model.GUser;
-import com.gomito.Gomitobackend.model.Notification;
+import com.gomito.Gomitobackend.model.*;
 import com.gomito.Gomitobackend.repository.GBoardRepository;
 import com.gomito.Gomitobackend.repository.GCardRepository;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GCardService;
-import com.gomito.Gomitobackend.service.GUserService;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -35,6 +31,12 @@ public class NotificationController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private NotificationStatusService statusService;
+
     @MessageMapping("/notifyAll/{cardId}")
     public void sendNotificationToAll(@DestinationVariable Long cardId, NotificationDto dto) {
         GCard card = cardService.findById(cardId);
@@ -44,8 +46,19 @@ public class NotificationController {
             GUser currentUser = userService.findUserByName(dto.getSenderName());
             if (userService.checkMemberOfBoard(currentUser, board.getBoardId())) {
                 List<GUser> members = board.getUsers();
+
                 for (GUser anotherMember : members) {
                     if (!anotherMember.getUsername().equals(dto.getSenderName())) {
+                        System.out.println("Saving notification of " + anotherMember.getUsername());
+                        Notification newNotification = new Notification();
+                        newNotification.setNotificationName(dto.getMessage());
+                        newNotification.setSender(currentUser);
+                        newNotification.setCreatedDate(Instant.now());
+                        NotificationStatus status = new NotificationStatus();
+                        status.setReceiver(anotherMember);
+                        status.setNotification(notificationService.save(newNotification));
+                        status.setStatus(0);
+                        statusService.save(status);
                         System.out.println("Send notification to " + anotherMember.getUsername());
                         simpMessagingTemplate.convertAndSend("/topic/notify/" + anotherMember.getUsername(), dto);
                     }
@@ -63,6 +76,16 @@ public class NotificationController {
             GUser sender = userService.findUserByName(dto.getSenderName());
             GUser receiver = userService.findUserByName(dto.getReceiverName());
             if (userService.checkMemberOfBoard(sender, board.getBoardId()) && userService.checkMemberOfBoard(receiver, board.getBoardId())) {
+                System.out.println("Saving notification of " + receiver.getUsername());
+                Notification newNotification = new Notification();
+                newNotification.setSender(sender);
+                newNotification.setNotificationName(dto.getMessage());
+                newNotification.setCreatedDate(Instant.now());
+                NotificationStatus status = new NotificationStatus();
+                status.setReceiver(receiver);
+                status.setStatus(0);
+                status.setNotification(notificationService.save(newNotification));
+                statusService.save(status);
                 System.out.println("Send notification to " + receiver.getUsername());
                 simpMessagingTemplate.convertAndSend("/topic/notify/" + receiver.getUsername(), dto);
             }

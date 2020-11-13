@@ -12,10 +12,13 @@ import java.util.List;
 
 @Service
 public class NotificationService {
+
     @Autowired
     NotificationRepository notificationRepository;
+
     @Autowired
     GUserRepository gUserRepository;
+
     @Autowired
     AuthService authService;
 
@@ -29,12 +32,6 @@ public class NotificationService {
     }
 
     public Notification save(Notification notification) {
-        GUser currentUser = authService.getCurrentUser();
-        Notification noti = notificationRepository.save(notification);
-        List<Notification> notifications = currentUser.getNotifications();
-        notifications.add(noti);
-        currentUser.setNotifications(notifications);
-        gUserRepository.save(currentUser);
-        return noti;
+        return notificationRepository.save(notification);
     }
 }
