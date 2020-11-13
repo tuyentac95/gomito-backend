@@ -48,7 +48,7 @@ public class CommentController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(commentToSave);
             }
         }
-        return (ResponseEntity<Comment>) ResponseEntity.status(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @DeleteMapping("/delete/{commentId}")
