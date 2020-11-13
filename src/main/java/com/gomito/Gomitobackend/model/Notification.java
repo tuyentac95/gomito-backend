@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -18,11 +19,9 @@ public class Notification {
     private Long notificationId;
     private String notificationName;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "notifications")
-    @JsonIgnore
-    private List<GUser> users;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private GUser sender;
+
+    private Instant createdDate;
 }
