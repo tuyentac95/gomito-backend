@@ -4,7 +4,9 @@ import com.gomito.Gomitobackend.dto.AuthenticationResponse;
 import com.gomito.Gomitobackend.dto.LoginRequest;
 import com.gomito.Gomitobackend.dto.RefreshTokenRequest;
 import com.gomito.Gomitobackend.dto.SignUpRequest;
+import com.gomito.Gomitobackend.model.MailRequest;
 import com.gomito.Gomitobackend.service.AuthService;
+import com.gomito.Gomitobackend.service.MailService;
 import com.gomito.Gomitobackend.service.RefreshTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -22,6 +27,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
+
 
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
