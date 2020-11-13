@@ -31,6 +31,7 @@ public class LabelController {
     public ResponseEntity<GLabel> createLabel(@RequestBody GLabelDto gLabelDto){
         GLabel gLabel = new GLabel();
         gLabel.setLabelName(gLabelDto.getLabelName());
+        gLabel.setColor(gLabelDto.getColor());
 
         GBoard gBoard = gBoardService.findById(gLabelDto.getBoardId());
         gLabel.setBoard(gBoard);

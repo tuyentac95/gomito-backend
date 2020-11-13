@@ -25,4 +25,5 @@ public class GLabel {
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "labels")
     @JsonIgnore
     private List<GCard> cards;
+    private String color;
 }
