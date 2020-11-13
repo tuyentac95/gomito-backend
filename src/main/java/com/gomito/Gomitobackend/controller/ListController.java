@@ -43,6 +43,7 @@ public class ListController {
             cardDto.setListId(id);
             cardDto.setCardIndex(card.getCardIndex());
             cardDto.setLabels(card.getLabels());
+            cardDto.setMembers(card.getUsers());
             cardDtos.add(cardDto);
         }
         return ResponseEntity.status(HttpStatus.OK).body(cardDtos);
