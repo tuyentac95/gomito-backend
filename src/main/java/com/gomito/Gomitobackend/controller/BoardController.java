@@ -113,4 +113,15 @@ public class BoardController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(members);
     }
+
+    @GetMapping("/{boardId}/getInfo")
+    public ResponseEntity<GBoard> getInfo(@PathVariable Long boardId) {
+        GUser currentUser = authService.getCurrentUser();
+        if (!gUserService.checkMemberOfBoard(currentUser, boardId))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        GBoard response = gBoardService.findById(boardId);
+        if (response == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
