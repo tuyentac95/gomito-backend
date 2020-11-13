@@ -12,4 +12,5 @@ public class NotificationDto {
     private String senderName;
     private String message;
     private String receiverName;
+    private Integer status;
 }

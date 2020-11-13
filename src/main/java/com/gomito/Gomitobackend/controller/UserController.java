@@ -1,12 +1,12 @@
 package com.gomito.Gomitobackend.controller;
 
 import com.gomito.Gomitobackend.dto.ChangePasswordRequest;
+import com.gomito.Gomitobackend.dto.NotificationDto;
 import com.gomito.Gomitobackend.model.GBoard;
 import com.gomito.Gomitobackend.model.GUser;
 import com.gomito.Gomitobackend.dto.GUserDto;
-import com.gomito.Gomitobackend.service.AuthService;
-import com.gomito.Gomitobackend.service.GBoardService;
-import com.gomito.Gomitobackend.service.GUserService;
+import com.gomito.Gomitobackend.model.NotificationStatus;
+import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +27,12 @@ public class UserController {
 
     @Autowired
     private GUserService gUserService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private NotificationStatusService statusService;
 
     @GetMapping("/{id}")
     public ResponseEntity<List<GBoard>> findAllBoardByUserId(@PathVariable Long id) {
@@ -78,6 +84,22 @@ public class UserController {
         currentUser.setAvatarUrl(user.getAvatarUrl());
         GUser updatedUser = gUserService.saveUser(currentUser);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-notifications")
+    public ResponseEntity<List<NotificationDto>> getNotification() {
+        return ResponseEntity.status(HttpStatus.OK).body(notificationService.findAllNotificationsOfCurrentUser());
+    }
+
+    @PutMapping("/mark-read")
+    public ResponseEntity<String> markRead(@RequestBody List<NotificationDto> dtos) {
+        for (NotificationDto dto : dtos) {
+            NotificationStatus status = statusService.findById(dto.getNotificationId());
+            System.out.println("check status: " + status.getStatusId());
+            status.setStatus(1);
+            statusService.save(status);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Mark read");
     }
 
 }

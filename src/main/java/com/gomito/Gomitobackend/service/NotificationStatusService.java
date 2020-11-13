@@ -15,4 +15,8 @@ public class NotificationStatusService {
     public NotificationStatus save(NotificationStatus status) {
         return statusRepository.save(status);
     }
+
+    public NotificationStatus findById(Long notificationId) {
+        return statusRepository.findById(notificationId).orElse(null);
+    }
 }

@@ -6,11 +6,11 @@ import com.gomito.Gomitobackend.repository.GBoardRepository;
 import com.gomito.Gomitobackend.repository.GCardRepository;
 import com.gomito.Gomitobackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,9 +27,6 @@ public class NotificationController {
 
     @Autowired
     private GUserService userService;
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private NotificationService notificationService;
@@ -91,4 +88,5 @@ public class NotificationController {
             }
         }
     }
+
 }
