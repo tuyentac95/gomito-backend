@@ -12,4 +12,5 @@ public class GLabelDto {
     private String labelName;
     private Long boardId;
     private Integer labelIndex;
+    private String color;
 }
