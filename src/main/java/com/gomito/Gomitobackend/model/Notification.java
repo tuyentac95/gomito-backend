@@ -21,5 +21,8 @@ public class Notification {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "notifications")
     @JsonIgnore
     private List<GUser> users;
-}
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private GUser sender;
+}
