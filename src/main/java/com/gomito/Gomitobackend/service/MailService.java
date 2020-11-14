@@ -48,13 +48,13 @@ public class MailService {
         }
     }
 
-    public void sendMail(MailRequest request, Map<String, Object> model){
+    public void sendMail(MailRequest request, Map<String, Object> model, String mailTemplate){
         System.out.println("Sending email....");
         MimeMessage message = mailSender.createMimeMessage();
         try{
             MimeMessageHelper helper = new MimeMessageHelper(message,MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-            Template template = configuration.getTemplate("email-template.ftl");
+            Template template = configuration.getTemplate(mailTemplate);
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template,model);
 
             helper.setTo(request.getTo());

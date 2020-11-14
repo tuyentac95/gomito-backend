@@ -32,6 +32,8 @@ public class GBoardService {
     @Autowired
     private GCardRepository gCardRepository;
 
+    public static final String FROM_EMAIL = "langquang1995@gmail.com";
+
     public List<GBoard> findAllBoardByUserId(Long id){
         GUser user = gUserRepository.findById(id).orElse(null);
         return user != null ? user.getBoards() : null;
@@ -64,13 +66,26 @@ public class GBoardService {
             joinGroupTokenRepository.save(joinGroupToken);
 
             GUser currentUser = authService.getCurrentUser();
-            mailService.setMail(new NotificationEmail(
-                    currentUser.getUsername() + " added you to the board " + board.getBoardName(),
-                    member.getEmail(),
-                    "Please click on the below url to join the board:\n"
-                            + "http://localhost:8080/api/users/join/" + token
-            ));
+//            mailService.setMail(new NotificationEmail(
+//                    currentUser.getUsername() + " added you to the board " + board.getBoardName(),
+//                    member.getEmail(),
+//                    "Please click on the below url to join the board:\n"
+//                            + "http://localhost:8080/api/users/join/" + token
+//            ));
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.setName(member.getUsername());
+            mailRequest.setTo(member.getEmail());
+            mailRequest.setSubject("Chúc mừng bạn" + member.getUsername() + " đã được thêm làm thành viên của bảng!");
+            mailRequest.setFrom(FROM_EMAIL);
 
+            String billHTML = "";
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("Username", member.getUsername());
+            model.put("Email", member.getEmail());
+            model.put("message", "http://localhost:8080/api/users/join/" + token);
+
+            mailService.sendMail(mailRequest, model, "email-template-addBoard.ftl");
             return true;
         } else return false;
     }

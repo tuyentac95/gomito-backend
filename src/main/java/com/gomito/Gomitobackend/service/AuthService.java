@@ -5,7 +5,6 @@ import com.gomito.Gomitobackend.dto.*;
 import com.gomito.Gomitobackend.model.GUser;
 
 import com.gomito.Gomitobackend.model.MailRequest;
-import com.gomito.Gomitobackend.model.NotificationEmail;
 import com.gomito.Gomitobackend.model.VerificationToken;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.VerificationTokenRepository;
@@ -56,7 +55,7 @@ public class AuthService {
         MailRequest mailRequest = new MailRequest();
         mailRequest.setName(signUpRequest.getUsername());
         mailRequest.setTo(signUpRequest.getEmail());
-        mailRequest.setSubject("Chúc mừng bạn" + signUpRequest.getUsername() + "đã đăng ký thành công!");
+        mailRequest.setSubject("Chúc mừng bạn " + signUpRequest.getUsername() + " đã đăng ký thành công!");
         mailRequest.setFrom(FROM_EMAIL);
 
         String billHTML = "";
@@ -64,8 +63,9 @@ public class AuthService {
         Map<String, Object> model = new HashMap<>();
         model.put("Username", signUpRequest.getUsername());
         model.put("Email", signUpRequest.getEmail());
+        model.put("message", "http://localhost:8080/auth/accountVerification/" + token);
 
-        mailService.sendMail(mailRequest, model);
+        mailService.sendMail(mailRequest, model, "email-template-signup.ftl");
 
 //        mailService.setMail(new NotificationEmail("Please Activate your Account",
 //                gUser.getEmail(),"Thank you for signing up to GOMITO, " +
