@@ -4,7 +4,7 @@ import com.gomito.Gomitobackend.Exception.SpringGomitoException;
 import com.gomito.Gomitobackend.dto.*;
 import com.gomito.Gomitobackend.model.GUser;
 
-import com.gomito.Gomitobackend.model.NotificationEmail;
+import com.gomito.Gomitobackend.model.MailRequest;
 import com.gomito.Gomitobackend.model.VerificationToken;
 import com.gomito.Gomitobackend.repository.GUserRepository;
 import com.gomito.Gomitobackend.repository.VerificationTokenRepository;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,6 +37,7 @@ public class AuthService {
     private final MailService mailService;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
+    public static final String FROM_EMAIL = "langquang1995@gmail.com";
 
     @Transactional
     public void signUp(SignUpRequest signUpRequest) {
@@ -42,11 +45,28 @@ public class AuthService {
         gUser.setUsername(signUpRequest.getUsername());
         gUser.setEmail(signUpRequest.getEmail());
         gUser.setPassword(encodePassword(signUpRequest.getPassword()));
-//        gUser.setEnabled(false);
-        gUser.setEnabled(true);
+        gUser.setEnabled(false);
+//        gUser.setEnabled(true);
         gUserRepository.save(gUser);
 
         String token = generateVerificationToken(gUser);
+
+        // gửi mail
+        MailRequest mailRequest = new MailRequest();
+        mailRequest.setName(signUpRequest.getUsername());
+        mailRequest.setTo(signUpRequest.getEmail());
+        mailRequest.setSubject("Chúc mừng bạn " + signUpRequest.getUsername() + " đã đăng ký thành công!");
+        mailRequest.setFrom(FROM_EMAIL);
+
+        String billHTML = "";
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("Username", signUpRequest.getUsername());
+        model.put("Email", signUpRequest.getEmail());
+        model.put("message", "http://localhost:8080/auth/accountVerification/" + token);
+
+        mailService.sendMail(mailRequest, model, "email-template-signup.ftl");
+
 //        mailService.setMail(new NotificationEmail("Please Activate your Account",
 //                gUser.getEmail(),"Thank you for signing up to GOMITO, " +
 //                "please click on the below url to activate your account:\n" +
