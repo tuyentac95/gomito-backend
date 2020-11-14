@@ -48,7 +48,4 @@ public class AttachmentController {
         attachmentService.deleteAttachment(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-
 }
