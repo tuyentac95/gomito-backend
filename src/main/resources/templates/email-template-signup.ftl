@@ -13,15 +13,13 @@
     <div style="text-align: center">
     <p> Chúc mừng ban đã đăng ký tài khoản ${Username} thành công! </p>
     <p> Tài khoản sẽ có hiệu lục sau khi được xác nhận kích hoạt </p>
-    <p> Xin vui lòng nhấn vào link ${message}  để kích hoạt trực tiếp </p>
+    <p> Xin vui lòng nhấn vào link <a href="${message}">HERE</a>  để kích hoạt trực tiếp </p>
     <p> Cảm ơn và hẹn gặp lại tại GOMITO-TRELLO</p>
     </div>
     <div style="background-color: bisque; color: black; font-family: Arial">
         <p style="padding: 2px">Quý khách nhận được email này vì đã đăng ký tại GOMITO-TRELLO.</p>
         <p style="padding: 2px">Bạn cần được hỗ trợ ngay? Chỉ cần email gomito_trello@gmail.com, hoặc gọi số điện thoại 1900-6035 (8-21h cả T7,CN). Đội ngũ GOMITO-TRELLO luôn sẵn sàng hỗ trợ bạn bất kì lúc nào.</p>
     </div>
-<#--    <span>${Username}</span>-->
-<#--    <span>${Email}</span>-->
 </fieldset>
 </body>
 </html>
