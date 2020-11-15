@@ -52,6 +52,7 @@ public class CardController {
         Integer maxIndex = gCardService.findMaxIndex(cardDto.getListId());
         gcard.setCardIndex(maxIndex + 1);
 
+
         GCard card = gCardService.save(gcard);
         return ResponseEntity.status(HttpStatus.CREATED).body(card);
     }
@@ -233,7 +234,7 @@ public class CardController {
                     commentDto.setCommentId(newComment.getCommentId());
                     commentDto.setContent(newComment.getContent());
                     commentDto.setCardId(cardId);
-                    commentDto.setGUser(newComment.getUser());
+                    commentDto.setUser(newComment.getUser());
                     commentDtos.add(commentDto);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);

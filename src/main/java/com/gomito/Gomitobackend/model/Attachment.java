@@ -20,6 +20,7 @@ public class Attachment {
 
     private String attachmentName;
 
+    @Column(columnDefinition = "longtext")
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
