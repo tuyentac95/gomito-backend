@@ -17,7 +17,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.net.CacheRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 

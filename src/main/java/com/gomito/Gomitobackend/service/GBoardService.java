@@ -75,15 +75,14 @@ public class GBoardService {
             MailRequest mailRequest = new MailRequest();
             mailRequest.setName(member.getUsername());
             mailRequest.setTo(member.getEmail());
-            mailRequest.setSubject("Chúc mừng bạn" + member.getUsername() + " đã được thêm làm thành viên của bảng!");
+            mailRequest.setSubject("Chúc mừng bạn " + member.getUsername() + " đã được thêm làm thành viên của bảng!");
             mailRequest.setFrom(FROM_EMAIL);
-
-            String billHTML = "";
 
             Map<String, Object> model = new HashMap<>();
             model.put("Username", member.getUsername());
             model.put("Email", member.getEmail());
-            model.put("message", "http://localhost:8080/api/users/join/" + token);
+//            model.put("message", "http://localhost:4200/api/users/join/" + token);
+            model.put("message", "http://localhost:4200/add-member-verify-token/" + token);
 
             mailService.sendMail(mailRequest, model, "email-template-addBoard.ftl");
             return true;
