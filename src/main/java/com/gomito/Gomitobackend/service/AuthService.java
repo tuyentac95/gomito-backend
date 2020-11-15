@@ -63,7 +63,7 @@ public class AuthService {
         Map<String, Object> model = new HashMap<>();
         model.put("Username", signUpRequest.getUsername());
         model.put("Email", signUpRequest.getEmail());
-        model.put("message", "http://localhost:8080/auth/accountVerification/" + token);
+        model.put("message", "http://localhost:4200/login?isRegistered=true&verifyToken=" + token);
 
         mailService.sendMail(mailRequest, model, "email-template-signup.ftl");
 

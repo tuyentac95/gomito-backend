@@ -75,7 +75,7 @@ public class GBoardService {
             MailRequest mailRequest = new MailRequest();
             mailRequest.setName(member.getUsername());
             mailRequest.setTo(member.getEmail());
-            mailRequest.setSubject("Chúc mừng bạn" + member.getUsername() + " đã được thêm làm thành viên của bảng!");
+            mailRequest.setSubject("Chúc mừng bạn " + member.getUsername() + " đã được thêm làm thành viên của bảng!");
             mailRequest.setFrom(FROM_EMAIL);
 
             String billHTML = "";
