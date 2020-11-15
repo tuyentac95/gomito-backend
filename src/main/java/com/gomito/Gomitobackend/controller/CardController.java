@@ -52,6 +52,7 @@ public class CardController {
         Integer maxIndex = gCardService.findMaxIndex(cardDto.getListId());
         gcard.setCardIndex(maxIndex + 1);
 
+
         GCard card = gCardService.save(gcard);
         return ResponseEntity.status(HttpStatus.CREATED).body(card);
     }
@@ -119,9 +120,18 @@ public class CardController {
     }
 
     @GetMapping("/attachment/{id}")
-    public ResponseEntity<List<Attachment>> getAttachmentList(@PathVariable Long id) {
+    public ResponseEntity<List<AttachmentDto>> getAttachmentList(@PathVariable Long id) {
         List<Attachment> attachments = attachmentService.getAttachmentList(id);
-        return ResponseEntity.status(HttpStatus.OK).body(attachments);
+        List<AttachmentDto> dtos = new ArrayList<>();
+        for (Attachment at : attachments) {
+            AttachmentDto dto = new AttachmentDto();
+            dto.setAttachmentId(at.getAttachmentId());
+            dto.setAttachmentName(at.getAttachmentName());
+            dto.setAttachmentUrl(at.getUrl());
+            dto.setCardId(at.getCard().getCardId());
+            dtos.add(dto);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
     @GetMapping("/{id}")
@@ -224,7 +234,7 @@ public class CardController {
                     commentDto.setCommentId(newComment.getCommentId());
                     commentDto.setContent(newComment.getContent());
                     commentDto.setCardId(cardId);
-                    commentDto.setGUser(newComment.getUser());
+                    commentDto.setUser(newComment.getUser());
                     commentDtos.add(commentDto);
                 }
                 return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
