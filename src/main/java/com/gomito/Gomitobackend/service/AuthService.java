@@ -58,8 +58,6 @@ public class AuthService {
         mailRequest.setSubject("Chúc mừng bạn " + signUpRequest.getUsername() + " đã đăng ký thành công!");
         mailRequest.setFrom(FROM_EMAIL);
 
-        String billHTML = "";
-
         Map<String, Object> model = new HashMap<>();
         model.put("Username", signUpRequest.getUsername());
         model.put("Email", signUpRequest.getEmail());
